@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.ScrollPane?>
+
+<BorderPane fx:controller="com.barrette.tireinventory.DesktopApp.controllers.mainController" xmlns:fx="http://javafx.com/fxml">
+	<stylesheets>
+		<URL value="@style/mainStyle.css"/>
+	</stylesheets>
+
+	<!--  top panel for navigation -->
+	<top>
+		<HBox fx:id="nav" HBox.hgrow="always">
+			<HBox id="left" HBox.hgrow="always">
+				<Button styleClass="buttons" Text="Add New" onAction="#addButton"/>
+				<Button styleClass="buttons" Text="Add Existing" onAction="#addExistingButton"/>
+				<Button styleClass="buttons" Text="Show All" onAction="#showAllButton"/>
+			</HBox>
+			
+			<HBox id="right" HBox.hgrow="ALWAYS">
+				<ComboBox fx:id="tireWidth"></ComboBox>
+				<ComboBox fx:id="aspectRatio"></ComboBox>
+				<Label>R</Label>
+				<ComboBox fx:id="rimSize"></ComboBox>
+				<Label id="space">&#160;</Label>    <!-- add blank space -->
+				<Button styleClass="buttons" Text="Query" onAction="#queryButton"/>
+			</HBox>
+			
+		</HBox>
+	</top>
+
+
+
+	<center>
+		<ScrollPane fx:id="scroll">
+			<VBox fx:id="mainPane">
+				
+				
+		
+		
+			</VBox>	
+		
+		</ScrollPane>
+			
+	</center>
+
+	<!--     Bottom panel for message   -->
+	<bottom>
+		<AnchorPane id="messagePane">
+			<Label fx:id="message"></Label>
+			
+			<Button fx:id="setupButton" AnchorPane.rightAnchor="0.0" Text="Setup" onAction="#setupButtonHandler"/>
+		</AnchorPane>
+		
+	</bottom>
+
+</BorderPane>

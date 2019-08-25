@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<BorderPane fx:controller="controllers.AddExistingController" xmlns:fx="http://javafx.com/fxml/1">
+	<stylesheets>
+		<URL value="@style/addExistingStyleSheet.css"/>
+	</stylesheets>
+	
+	<top>	
+		<HBox HBox.hgrow="always" alignment="CENTER">
+			<Label styleClass="Title">Add To Existing Inventory</Label>
+		</HBox>
+	</top>
+
+	<center>
+	
+		<VBox styleClass="center" spacing="20">
+			<ListView fx:id="listView"/>
+			<HBox HBox.hgrow="always" alignment="CENTER" >
+				<Label text="Quantity" styleClass="h2"/>
+				<ComboBox fx:id="qtyCombo"/>
+			</HBox>
+			<HBox HBox.hgrow="always" alignment="CENTER" spacing="25" styleClass="buttonBox">
+				<Button text="Add"  onAction="#addButton" />
+				<Button text="Cancel" onAction="#cancelButton"/> 
+			</HBox>
+		</VBox>
+	
+	</center>
+	
+	
+</BorderPane>
+

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.PasswordField?>
+
+<VBox fx:controller="controllers.SetupController" xmlns:fx="http://javafx.com/fxml" VBox.vgrow="ALWAYS">
+	<stylesheets>
+		<URL value="@style/setup.css"/>
+	</stylesheets>
+
+	<HBox id="align">
+		<Label styleClass="h1" text="User Name:"/>
+		<TextField fx:id="userNameText" />
+		<Label styleClass="h1" text="Password:"/>
+		<PasswordField fx:id="pass1Field"/>
+		<Label styleClass="h1" text="Confirm Password:"/>
+		<PasswordField fx:id="pass2Field"/>
+		<Label fx:id="passMatch" text="Passwords must match" visible="false"/>
+	</HBox>
+
+
+	<HBox id="align" >
+		<Label styleClass="h1" text="Database Server Address: "/>
+
+		<fx:define>
+			<ToggleGroup fx:id="addressGroup"/>
+		</fx:define>
+		<RadioButton text="This Computer" toggleGroup="$addressGroup" fx:id="address1" styleClass="h2"/>
+		<RadioButton text="Other computer" toggleGroup="$addressGroup" fx:id="address2" styleClass="h2"/>
+		<Label styleClass="h2" text="IP Address"/>
+		<TextField fx:id="ipAddress" editable="false"/>
+	</HBox>
+
+
+
+
+
+
+
+	<HBox id="save_cancel">
+		<Button id="saveButton" onAction="#saveButtonHandler" text="Save" />
+		<Button id="resetButton" onAction="#resetButtonHandler" text="Reset"/>
+	</HBox>
+
+</VBox>

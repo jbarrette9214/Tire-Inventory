@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+
+
+<HBox fx:controller="controllers.TireViewController" xmlns:fx="http://javafx.com/fxml"
+	id="main" stylesheets="@/gui/style/TireViewStyle.css" HBox.hgrow="always"> 
+	
+ 	 
+	<VBox id="leftColumn">
+		<Label fx:id="brand_model" styleClass="h1"></Label>
+		<Label fx:id="tireSize" styleClass="h2"></Label>
+		<Label fx:id="type" styleClass="h2"></Label>
+	</VBox>
+	
+
+	<VBox id="center" HBox.hgrow="always">
+		<Label fx:id="quantity" styleClass="h2"></Label>    
+	</VBox>
+	
+	<VBox  id="right_center">
+		<HBox styleClass="right">
+			<Label>QTY: </Label>
+			<ComboBox fx:id="qty"></ComboBox>
+		</HBox>
+		<HBox styleClass="right">
+			<Button styleClass="buttons" onAction="#removeHandler" Text="Remove"/>	
+		</HBox>
+		
+	</VBox>
+	
+	
+
+
+
+</HBox>
+

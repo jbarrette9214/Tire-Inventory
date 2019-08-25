@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:controller="controllers.AddTireViewController" xmlns:fx="http://javafx.com/fxml/1">
+	<stylesheets>
+		<URL value="@style/AddTireStyleSheet.css"/>
+	</stylesheets>
+
+	<top>
+		<HBox HBox.hgrow="ALWAYS" styleClass="title">
+			<Label Text="Add New Tire to Inventory" styleClass="largeText"/>
+		</HBox>
+		
+	</top>
+
+
+
+	<center>
+		<VBox>
+			<Label Text="Barcode"/>
+			<TextField fx:id="barcodeField" styleClass="textField"/>
+			<Label Text="Brand"/>
+			<TextField fx:id="brandField" styleClass="textField"/>
+			<Label Text="Model"/>
+			<TextField fx:id="modelField" styleClass="textField"/>
+			<Label Text="Size"/>
+			<HBox>
+				<ComboBox fx:id="widthBox" />
+				<Label Text="/" />
+				<ComboBox fx:id="aspectBox"/>
+				<Label Text="R"/>
+				<ComboBox fx:id="rimSizeBox"/>
+			</HBox>
+			<Label Text="Type"/>
+			<ComboBox fx:id="typeBox"/>
+			<Label Text="Quantity to add"/>
+			<ComboBox fx:id="qtyBox"/>
+			
+			<HBox styleClass="buttonBox" >
+				<Button Text="Save"  onAction="#saveButtonHandler"/>
+				<Button Text="Cancel"  onAction="#cancelButtonHandler"/>
+			</HBox>
+			
+		</VBox>
+		
+	</center>
+
+</BorderPane>
+
