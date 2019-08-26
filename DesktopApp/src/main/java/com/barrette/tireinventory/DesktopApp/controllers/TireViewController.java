@@ -1,6 +1,7 @@
 package com.barrette.tireinventory.DesktopApp.controllers;
 
-import com.barrette.tireinventory.Models.Tire;
+import com.barrette.tireinventory.DesktopApp.App;
+import com.barrette.tireinventory.DesktopApp.models.Tire;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -44,15 +45,16 @@ public class TireViewController {
 		String message = "";
 		
 		int remove = Integer.parseInt(qty.getValue());
+		App.dao.decrementQuantity(thisTire, remove);
+	/*	
 		if((remove != 0) && (remove <= thisTire.getQuantity())) {
 			int newQty = thisTire.getQuantity() - remove;
-			RestServices rest = new RestServices();
 			message = rest.removeTires(thisTire, newQty);
 		}
 		
 		Alert alert = new Alert(AlertType.NONE, message, ButtonType.OK);
 		alert.showAndWait();
-		
+	*/	
 		updateView(thisTire);
 	}
 }

@@ -160,8 +160,7 @@ public class mainController {
 		currentTab = tireViewTab;
 		
 		
-		RestServices rest = new RestServices();
-		List<Tire> tiresRetrieved = rest.getAllTires();
+		List<Tire> tiresRetrieved = App.dao.getAllTires();
 		
 		
 		VBox tirePane = new VBox();
@@ -190,9 +189,8 @@ public class mainController {
 		currentTab = tireViewTab;
 				
 		
-		RestServices rest = new RestServices();
-
-		List<Tire> tiresRetrieved = rest.getTiresBySize(Integer.parseInt(tireWidth.getValue()), 
+		
+		List<Tire> tiresRetrieved = App.dao.getTiresBySize(Integer.parseInt(tireWidth.getValue()), 
 				Integer.parseInt(aspectRatio.getValue()), Integer.parseInt(rimSize.getValue()));
 		
 		

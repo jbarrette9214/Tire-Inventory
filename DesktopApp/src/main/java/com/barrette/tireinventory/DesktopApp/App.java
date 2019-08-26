@@ -18,8 +18,9 @@ import javafx.stage.Stage;
 public class App extends Application
 {
 
+	public static DAO dao;
+	
 	public static void main(String[] args) {
-		
 		launch(args);
 	}
 
@@ -34,6 +35,8 @@ public class App extends Application
 			System.exit(0);
 		}
 	*/	
+		dao = new DAO();
+
 		
 		Parent root = FXMLLoader.load(App.class.getResource("resources/fxml_main.fxml"));
 		

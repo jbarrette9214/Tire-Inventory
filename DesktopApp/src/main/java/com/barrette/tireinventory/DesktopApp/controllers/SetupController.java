@@ -1,6 +1,6 @@
 package com.barrette.tireinventory.DesktopApp.controllers;
 
-import com.barrette.tireinventory.Models.SetupData;
+import com.barrette.tireinventory.DesktopApp.models.SetupData;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;

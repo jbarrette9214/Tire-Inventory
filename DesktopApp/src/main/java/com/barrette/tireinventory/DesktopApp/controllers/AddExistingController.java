@@ -1,6 +1,7 @@
 package com.barrette.tireinventory.DesktopApp.controllers;
 
-import com.barrette.tireinventory.Models.*;
+import com.barrette.tireinventory.DesktopApp.App;
+import com.barrette.tireinventory.DesktopApp.models.*;
 
 import java.util.Comparator;
 import java.util.List;
@@ -18,7 +19,6 @@ public class AddExistingController {
 	@FXML private ListView<String> listView;
 	
 	private List<Tire> retrieved;
-	private RestServices rest;
 	
 	/**
 	 * set the form up 
@@ -29,11 +29,10 @@ public class AddExistingController {
 		qtyCombo.getItems().setAll(qty);
 		
 				
-		rest = new RestServices();
 		
-		retrieved = rest.getAllTires();
+		retrieved = App.dao.getAllTires();
 		
-		retrieved.sort(Comparator.comparing(Tire::getBrand));
+//		retrieved.sort(Comparator.comparing(Tire::brand));
 		
 		listView.getItems().clear();
 		for(Tire t : retrieved) {
@@ -59,12 +58,9 @@ public class AddExistingController {
 		
 		//make sure a quantity was selected
 		if(qtyCombo.getSelectionModel().getSelectedItem() != null  && temp != null) {
-			int newQty = Integer.parseInt(qtyCombo.getSelectionModel().getSelectedItem()) + temp.getQuantity();
-			String message = rest.addTiresToInventory(temp, newQty);
-
-			//show message
-			Alert alert = new Alert(AlertType.CONFIRMATION, message, ButtonType.OK);
-			alert.showAndWait();
+			
+			App.dao.incrementQuantity(temp, Integer.parseInt(qtyCombo.getValue()));
+			
 			
 			
 		}

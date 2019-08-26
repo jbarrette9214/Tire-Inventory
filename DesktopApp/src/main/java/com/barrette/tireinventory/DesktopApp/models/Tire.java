@@ -9,20 +9,16 @@
 
 package com.barrette.tireinventory.DesktopApp.models;
 
-import com.barrette.tireinventory.Controllers.TireViewController;
+import com.barrette.tireinventory.DesktopApp.controllers.*;
 import com.barrette.tireinventory.DesktopApp.App;
 
 
 import java.io.IOException;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 
 public class Tire {
 	private int id;
-	private String barcode;
 	private String brand;
 	private String tire_model;
 	private int width;
@@ -30,25 +26,30 @@ public class Tire {
 	private int rim_size;
 	private String tire_type;
 	private int quantity;
-
+	private boolean isNew;
 	
 	//constructor
 	public Tire() {
-		
+		//set all the default values
+		id=-1;
+		brand="none";
+		tire_model="none";
+		width = 0;
+		aspect_ratio=0;
+		rim_size=0;
+		tire_type="all season";
+		quantity = -1;
+		isNew = true;
 	}
 
+	public void setId(int idIn) {
+		id = idIn;
+	}
+	
 	public int getId() {
 		return id;
 	}
-	
-	public String getBarcode() {
-		return barcode.toUpperCase();
-	}
-	
-	public void setBarcode(String code) {
-		barcode = code;
-	}
-	
+		
 	public String getBrand() {
 		return brand.toUpperCase();
 	}
@@ -104,6 +105,16 @@ public class Tire {
 	public void setQuantity(int quant) {
 		quantity = quant;
 	}
+	
+	
+	public boolean getIsNew() {
+		return isNew;
+	}
+	
+	public void setIsNew(boolean newIn) {
+		isNew = newIn;
+	}
+	
 	
 	public HBox getTireView() {
 		HBox pane = null;
