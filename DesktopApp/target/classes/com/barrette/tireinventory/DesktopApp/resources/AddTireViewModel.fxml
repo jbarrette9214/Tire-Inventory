@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:controller="controllers.AddTireViewController" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:controller="com.barrette.tireinventory.DesktopApp.controllers.AddTireViewController" xmlns:fx="http://javafx.com/fxml/1">
 	<stylesheets>
 		<URL value="@style/AddTireStyleSheet.css"/>
 	</stylesheets>
@@ -22,8 +22,6 @@
 
 	<center>
 		<VBox>
-			<Label Text="Barcode"/>
-			<TextField fx:id="barcodeField" styleClass="textField"/>
 			<Label Text="Brand"/>
 			<TextField fx:id="brandField" styleClass="textField"/>
 			<Label Text="Model"/>
@@ -38,6 +36,8 @@
 			</HBox>
 			<Label Text="Type"/>
 			<ComboBox fx:id="typeBox"/>
+			<Label Text="New or Used"/>
+			<ComboBox fx:id="newUsedBox"/>
 			<Label Text="Quantity to add"/>
 			<ComboBox fx:id="qtyBox"/>
 			

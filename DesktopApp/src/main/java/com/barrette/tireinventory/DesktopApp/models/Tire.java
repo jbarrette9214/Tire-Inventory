@@ -15,6 +15,7 @@ import com.barrette.tireinventory.DesktopApp.App;
 
 import java.io.IOException;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.layout.HBox;
 
 public class Tire {
@@ -117,18 +118,18 @@ public class Tire {
 	
 	
 	public HBox getTireView() {
-		HBox pane = null;
+		HBox pane = new HBox();
 		TireViewController controller = null;
 		try {
 			//create a FXMLLoader instance so that you can get the controller
 			
-			FXMLLoader loader = new FXMLLoader(App.class.getResource("/gui/TireViewModel.fxml"));
-			pane = loader.load();
+			FXMLLoader loader = new FXMLLoader(App.class.getResource("resources/TireViewModel.fxml"));
 			
+			pane = loader.load();
 			
 			controller =(TireViewController)loader.getController();
 		} catch (IOException e) {
-			System.err.println("Couldn't load");
+			e.printStackTrace();
 		}
 		
 		//make sure controller was loaded

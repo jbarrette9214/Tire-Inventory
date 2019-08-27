@@ -1,0 +1,42 @@
+#main {
+	-fx-border-color:black;
+	-fx-border-width:0 0 2px 0;
+	
+	-fx-min-height:150px;
+}
+
+
+#leftColumn {
+	-fx-min-width: 300px;
+	-fx-padding:10px 10px 10px 100px;
+}
+
+#center {
+	-fx-min-width:200px;
+	-fx-alignment:center ;
+}
+
+#right_center {
+	-fx-padding:25px;
+	-fx-alignment:center;
+}
+
+.right {
+	-fx-padding:0 25px 10px 0;
+	-fx-alignment:center-right ;
+}
+
+.h1 {
+	-fx-font-size:2.5em;
+	-fx-font-weight: bold;
+}
+
+.h2 {
+	-fx-padding:0 0 0 25px;
+	-fx-font-size:2em;
+}
+
+.buttons {
+	-fx-max-width:100px;
+	-fx-max-height:30px;
+}

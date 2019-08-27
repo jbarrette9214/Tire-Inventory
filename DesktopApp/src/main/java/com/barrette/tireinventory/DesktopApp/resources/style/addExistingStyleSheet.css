@@ -1,0 +1,34 @@
+BorderPane {
+	-fx-padding:0 0.0 0 0 ;
+}
+
+ListView {
+	-fx-max-width:60pc;
+	-fx-max-height:40pc;
+}
+
+Button {
+	-fx-min-width: 100px;
+	-fx-min-height: 30px;
+}
+
+.Title {
+	-fx-font-size: 3.0em;
+	-fx-padding:0 0 20px 0;
+}
+
+.center {
+	-fx-alignment:top-center;
+}
+
+.h2 {
+	-fx-font-size: 2.0em;
+	-fx-padding:0.0 25px 0.0 0.0;
+}
+
+.buttonBox {
+	-fx-padding:50px;
+}
+
+
+

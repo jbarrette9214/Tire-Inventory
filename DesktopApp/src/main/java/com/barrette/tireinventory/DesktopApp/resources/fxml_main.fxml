@@ -52,7 +52,6 @@
 		<AnchorPane id="messagePane">
 			<Label fx:id="message"></Label>
 			
-			<Button fx:id="setupButton" AnchorPane.rightAnchor="0.0" Text="Setup" onAction="#setupButtonHandler"/>
 		</AnchorPane>
 		
 	</bottom>

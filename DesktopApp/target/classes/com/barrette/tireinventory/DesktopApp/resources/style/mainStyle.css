@@ -1,0 +1,64 @@
+/* hides the tab part of the tab pane to try an imitate a card layout*/
+.tab-header-area {
+	visibility: hidden ;
+}
+
+#nav {
+	-fx-min-height: 50px;
+	-fx-padding: 10px;
+	-fx-spacing: 25px;
+	-fx-border-color: black;
+	-fx-background-color:lightgray ;
+}
+
+
+/*   scroll pane styling, max width, not horiz scroll, vertial as needed */
+#scroll {
+	-fx-fit-to-width:true;
+	-fx-hbar-policy:never ;
+	-fx-vbar-policy:as-needed ;
+}
+
+#left {
+	-fx-min-width: 500px;
+	-fx-spacing: 25px;
+}
+
+#right {
+	-fx-min-width:250px;
+	-fx-alignment:center-right ;
+	-fx-spacing: 10px;
+}
+
+
+
+#space {
+	-fx-min-width:100px;
+}
+
+
+
+.buttons {
+	-fx-min-width: 100px;
+	-fx-min-height: 30px;
+}
+
+
+#setupButton {
+	-fx-min-height: 30px;
+	-fx-min-width:100px;
+}
+
+
+/*   styling for the message pane at the bottom    */
+#messagePane {
+	-fx-background-color:lightgray ;
+	-fx-min-height: 30px;
+	-fx-max-height:30px;
+}
+
+#message {
+	-fx-padding:5px;
+	-fx-min-width: 400px;
+}
+

@@ -5,8 +5,8 @@
 <?import javafx.scene.control.*?>
 
 
-<HBox fx:controller="controllers.TireViewController" xmlns:fx="http://javafx.com/fxml"
-	id="main" stylesheets="@/gui/style/TireViewStyle.css" HBox.hgrow="always"> 
+<HBox fx:controller="com.barrette.tireinventory.DesktopApp.controllers.TireViewController" xmlns:fx="http://javafx.com/fxml"
+	id="main" stylesheets="@style/TireViewStyle.css" HBox.hgrow="always"> 
 	
  	 
 	<VBox id="leftColumn">

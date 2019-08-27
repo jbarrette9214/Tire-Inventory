@@ -1,0 +1,35 @@
+BorderPane {
+	-fx-padding:1pc 0 0 10pc;
+}
+
+HBox {
+	-fx-alignment:center-left ;
+}
+
+Label {
+	-fx-font-size:2.0em;
+}
+
+TextField {
+	-fx-max-width: 300px;
+}
+
+.title {
+	-fx-alignment:center ;
+}
+
+.largeText {
+	-fx-font-size:3.0em;
+}
+
+HBox {
+	-fx-padding:25px 0 0 0 ;
+	-fx-spacing:25px;
+}
+
+Button {
+	-fx-min-width: 100px;
+	-fx-min-height: 30px;
+}
+
+

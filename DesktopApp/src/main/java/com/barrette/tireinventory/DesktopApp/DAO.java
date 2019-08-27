@@ -1,6 +1,5 @@
 package com.barrette.tireinventory.DesktopApp;
 
-import java.io.File;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -29,10 +28,9 @@ public class DAO {
 		try {
 			
 			String userHome = System.getProperty("user.home") + "/tire_inventory.mv.db";
-			System.out.println(userHome);
 			
 			if(!Paths.get(userHome).toFile().exists()) {
-				Alert alert = new Alert(AlertType.CONFIRMATION, "Database doesn't exist, create one?",
+/*				Alert alert = new Alert(AlertType.CONFIRMATION, "Database doesn't exist, create one?",
 										ButtonType.YES, ButtonType.NO);
 				alert.showAndWait();
 				
@@ -41,7 +39,9 @@ public class DAO {
 				} else {
 					System.exit(0);
 				}
-			
+*/
+				createDB();
+				System.out.println("Created DB");
 			}
 			
 			conn = DriverManager.getConnection("jdbc:h2:~/tire_inventory", USER, PASS);
@@ -162,27 +162,27 @@ public class DAO {
 	 * @param tire
 	 */
 	public void addTireToDatabase(Tire tire) {
-		boolean isThere = checkForTire(tire);
+		int isThere = checkForTire(tire);
 		
 		//if the tire is there increment the quantity
 		//if not create the new instance
 		
-		if(isThere == true) {
+		if(isThere != -1) {
 			incrementQuantity(tire, tire.getQuantity());
 		} else {
 			String insert = "insert into tire_inventory (brand, tire_model, width, aspect_ratio, rim_size, tire_type, new, quantity)" +
-							" values (" + tire.getBrand() + "," + tire.getTireModel() + "," + tire.getWidth() + "," +
-							tire.getAspectRatio() + "," + tire.getRimSize() + "," + tire.getType() + "," +
+							" values ('" + tire.getBrand() + "','" + tire.getTireModel() + "'," + tire.getWidth() + "," +
+							tire.getAspectRatio() + "," + tire.getRimSize() + ",'" + tire.getType() + "'," +
 							tire.getIsNew() + "," + tire.getQuantity() + ");";
 			
 			try {
 				Statement stmt = conn.createStatement();
 				
 				stmt.executeUpdate(insert);
-								
+				
 				stmt.close();
 			} catch (SQLException e) {
-				
+				System.err.println(e);
 			}
 		}
 		
@@ -257,7 +257,7 @@ public class DAO {
 	 * @param tire
 	 * @return
 	 */
-	private boolean checkForTire(Tire tire) {
+	public int checkForTire(Tire tire) {
 		
 		String query = "select id from tire_inventory where brand =" + tire.getBrand() + ", width=" + tire.getWidth() +
 						", aspect_ratio=" + tire.getAspectRatio() + ", rim_size=" + tire.getRimSize() + ";";
@@ -266,8 +266,8 @@ public class DAO {
 			
 			ResultSet rs = stmt.executeQuery(query);
 			
-			if(rs.next() == false) {
-				return false;		//result set is empty so it is not in the db
+			while(rs.next()) {
+				return rs.getInt("id");
 			}
 			
 			stmt.close();
@@ -275,8 +275,9 @@ public class DAO {
 			
 		}
 		
-		return true;
+		return -1;
 	}
+	
 	
 	/**
 	 * used to convert the result set into a list

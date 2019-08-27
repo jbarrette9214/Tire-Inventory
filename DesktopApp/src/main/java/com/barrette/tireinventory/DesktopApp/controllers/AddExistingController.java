@@ -35,10 +35,11 @@ public class AddExistingController {
 //		retrieved.sort(Comparator.comparing(Tire::brand));
 		
 		listView.getItems().clear();
-		for(Tire t : retrieved) {
-			listView.getItems().add(t.toString());
+		if(retrieved != null) {
+			for(Tire t : retrieved) {
+				listView.getItems().add(t.toString());
+			}
 		}
-	
 	}
 	
 	/**

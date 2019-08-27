@@ -24,17 +24,14 @@ public class mainController {
 	@FXML private ComboBox<String> rimSize;
 	@FXML private Label message;
 	@FXML private VBox mainPane;
-	@FXML private VBox setupPane;
 	
-	@FXML private Button setupButton;
 	@FXML private ScrollPane scroll;
 	
 	private static Tab lastTab, currentTab;
 	private static SingleSelectionModel<Tab> tabSelection;
-	private Tab addNewTab, tireViewTab, setupTab, existingTab;
+	private Tab addNewTab, tireViewTab, existingTab;
 	private TabPane tabPane;
 	
-	private SetupController setupController;
 	private AddTireViewController addController;
 	private AddExistingController existingController;
 	
@@ -65,22 +62,12 @@ public class mainController {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.out.println("can't load addtireviewmodel.fxml");
 		}
 		addNewTab = new Tab();
 		addNewTab.setContent(addPane);
 		
-		
-		FXMLLoader loader2 = new FXMLLoader(App.class.getResource("resources/setup.fxml"));
-		try {
-			setupPane = loader2.load();
-			setupController = (SetupController)loader2.getController();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		setupTab = new Tab();
-		setupTab.setContent(setupPane);
-		
+				
 		FXMLLoader loader3 = new FXMLLoader(App.class.getResource("resources/AddExistingModel.fxml"));
 		BorderPane existingPane = null;
 		try {
@@ -89,6 +76,7 @@ public class mainController {
 			
 		} catch(IOException e) {
 			e.printStackTrace();
+			System.out.println("can't load addexisting.fxml");
 		}
 		existingTab = new Tab();
 		existingTab.setContent(existingPane);
@@ -100,7 +88,6 @@ public class mainController {
 		tabPane.getTabs().add(addNewTab);
 		tabPane.getTabs().add(tireViewTab);
 		tabPane.getTabs().add(existingTab);
-		tabPane.getTabs().add(setupTab);
 
 		tabSelection = tabPane.getSelectionModel();
 		
@@ -162,11 +149,19 @@ public class mainController {
 		
 		List<Tire> tiresRetrieved = App.dao.getAllTires();
 		
-		
 		VBox tirePane = new VBox();
-		for(Tire t : tiresRetrieved) {
-			tirePane.getChildren().add(t.getTireView());
+		if(tiresRetrieved != null) {
+			for(Tire t : tiresRetrieved) {
+				tirePane.getChildren().add(t.getTireView());
+			}
+		} else {
+			Label nothing = new Label();
+			nothing.setStyle("-fx-font-size:40;");
+			nothing.setText("Database is empty");
+			
+			tirePane.getChildren().add(nothing);
 		}
+		
 		
 		tireViewTab.setContent(null);
 		tireViewTab.setContent(tirePane);
@@ -214,22 +209,7 @@ public class mainController {
 		message.setText("Ready");
 	}
 	
-	/**
-	 * <p>handles the setup button being clicked
-	 * loads the setupTab to be viewed
-	 * </p>
-	 * @param ae
-	 */
-	@FXML protected void setupButtonHandler(ActionEvent ae) {
-		
-		lastTab = currentTab;
-		currentTab = setupTab;
-		
-		setupController.resetSetup();
-		
-		tabSelection.select(setupTab);
-	}
-	
+
 	public static void backTab() {
 		Tab temp;
 		

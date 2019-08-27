@@ -1,7 +1,8 @@
 package com.barrette.tireinventory.DesktopApp.controllers;
 
 
-import com.barrette.tireinventory.Models.*;
+import com.barrette.tireinventory.DesktopApp.App;
+import com.barrette.tireinventory.DesktopApp.models.*;
 
 import java.awt.Event;
 import java.util.List;
@@ -15,10 +16,11 @@ import javafx.scene.control.Alert.AlertType;
 
 
 public class AddTireViewController {
-	@FXML private TextField barcodeField, brandField, modelField;
-	@FXML private ComboBox<String> widthBox, aspectBox, rimSizeBox, typeBox, qtyBox;
+	@FXML private TextField brandField, modelField;
+	@FXML private ComboBox<String> widthBox, aspectBox, rimSizeBox, typeBox, newUsedBox, qtyBox;
 	
 	@FXML public void initialize() {
+/*
 		barcodeField.setText("");
 		//listener to check if barcode is already entered in the database and update the fields accordingly
 		barcodeField.focusedProperty().addListener((ov, oldv, newV) -> {
@@ -43,7 +45,7 @@ public class AddTireViewController {
 			}
 		});
 		
-		
+*/		
 		brandField.setText("");
 		modelField.setText("");
 		
@@ -60,6 +62,11 @@ public class AddTireViewController {
 		String[] types = {"All-Season", "Light Truck", "Snow", "Performance"};
 		typeBox.getItems().setAll(types);
 		
+		String[] newUsed = {"New", "Used"};
+		newUsedBox.getItems().setAll(newUsed);
+		newUsedBox.getSelectionModel().selectFirst();
+		
+		
 		String[] qty = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
 		qtyBox.getItems().setAll(qty);
 
@@ -68,17 +75,34 @@ public class AddTireViewController {
 	@FXML protected void saveButtonHandler(ActionEvent ae) {
 		Tire temp = new Tire();
 		
+		temp.setBrand(brandField.getText());
+		temp.setTireModel(modelField.getText());
+		temp.setWidth(Integer.parseInt(widthBox.getValue()));
+		temp.setAspectRatio(Integer.parseInt(aspectBox.getValue()));
+		temp.setRimSize(Integer.parseInt(rimSizeBox.getValue()));
 		
+		int id = App.dao.checkForTire(temp);
+		if(id != -1) {
+			//tire already in the database
+			temp.setId(id);
+
+			Alert alert = new Alert(AlertType.CONFIRMATION, "Tire already in database, updating quantity", ButtonType.OK);
+			alert.showAndWait();
+
+			
+			App.dao.incrementQuantity(temp, Integer.parseInt(qtyBox.getValue()));
+		} else {
+			temp.setType(typeBox.getValue());
+			App.dao.addTireToDatabase(temp);
+		}
 		
-		RestServices rest = new RestServices();
+/*		RestServices rest = new RestServices();
 		
 		Tire retrieved = rest.findByBarcode(barcodeField.getText());
 		
 		String message = "";
 		
 		if(retrieved !=  null) {
-			Alert alert = new Alert(AlertType.CONFIRMATION, "Tire already in database, updating quantity", ButtonType.OK);
-			alert.showAndWait();
 			
 			//already in the inventory
 			int newQty;
@@ -123,11 +147,11 @@ public class AddTireViewController {
 		}      
 		
 		String message = rest.addNewTire(temp);
-		*/
+		
 		
 		
 		Alert alert = new Alert(AlertType.NONE, message, ButtonType.OK);
-		alert.showAndWait();
+		alert.showAndWait();*/
 	}
 	
 	@FXML protected void cancelButtonHandler(ActionEvent ae) {
