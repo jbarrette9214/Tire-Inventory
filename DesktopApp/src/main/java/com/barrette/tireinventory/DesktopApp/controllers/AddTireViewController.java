@@ -19,33 +19,11 @@ public class AddTireViewController {
 	@FXML private TextField brandField, modelField;
 	@FXML private ComboBox<String> widthBox, aspectBox, rimSizeBox, typeBox, newUsedBox, qtyBox;
 	
-	@FXML public void initialize() {
-/*
-		barcodeField.setText("");
-		//listener to check if barcode is already entered in the database and update the fields accordingly
-		barcodeField.focusedProperty().addListener((ov, oldv, newV) -> {
-			if(!newV) {
-				//check the database and check if the barcode exists
-				RestServices rest = new RestServices();
-				Tire temp = rest.findByBarcode(barcodeField.getText());
-				if(temp != null) {
-					brandField.setText(temp.getBrand());
-					modelField.setText(temp.getTireModel());
-					widthBox.getItems().clear();
-					widthBox.setValue(Integer.toString(temp.getWidth()));
-					aspectBox.getItems().clear();
-					aspectBox.setValue(Integer.toString(temp.getAspectRatio()));
-					rimSizeBox.getItems().clear();
-					rimSizeBox.setValue(Integer.toString(temp.getRimSize()));
-					typeBox.getItems().clear();
-					typeBox.setValue(temp.getType());
-					qtyBox.requestFocus();
-				}
 	
-			}
-		});
-		
-*/		
+	/**
+	 * initializes all the values of the combo boxes
+	 */
+	@FXML public void initialize() {
 		brandField.setText("");
 		modelField.setText("");
 		
@@ -61,6 +39,7 @@ public class AddTireViewController {
 		
 		String[] types = {"All-Season", "Light Truck", "Snow", "Performance"};
 		typeBox.getItems().setAll(types);
+		typeBox.getSelectionModel().selectFirst();
 		
 		String[] newUsed = {"New", "Used"};
 		newUsedBox.getItems().setAll(newUsed);
@@ -72,14 +51,30 @@ public class AddTireViewController {
 
 	}
 	
+	
+	/**
+	 * executes when the save button is clicked, will check and make sure that the proper stuff is filled in
+	 * then will save the new tire to the database
+	 * @param ae
+	 */
 	@FXML protected void saveButtonHandler(ActionEvent ae) {
 		Tire temp = new Tire();
+		
+		
+		if(brandField.getText().isEmpty() || modelField.getText().isEmpty() || 
+				widthBox.getSelectionModel().getSelectedIndex() == -1 || aspectBox.getSelectionModel().getSelectedIndex() == -1 || 
+				rimSizeBox.getSelectionModel().getSelectedIndex() == -1|| qtyBox.getSelectionModel().getSelectedIndex() == -1) {
+					Alert alert = new Alert(AlertType.ERROR, "One or more fields are incomplete", ButtonType.OK);
+					alert.showAndWait();
+					return;
+		}
 		
 		temp.setBrand(brandField.getText());
 		temp.setTireModel(modelField.getText());
 		temp.setWidth(Integer.parseInt(widthBox.getValue()));
 		temp.setAspectRatio(Integer.parseInt(aspectBox.getValue()));
 		temp.setRimSize(Integer.parseInt(rimSizeBox.getValue()));
+		
 		
 		int id = App.dao.checkForTire(temp);
 		if(id != -1) {
@@ -95,65 +90,19 @@ public class AddTireViewController {
 			temp.setType(typeBox.getValue());
 			App.dao.addTireToDatabase(temp);
 		}
-		
-/*		RestServices rest = new RestServices();
-		
-		Tire retrieved = rest.findByBarcode(barcodeField.getText());
-		
-		String message = "";
-		
-		if(retrieved !=  null) {
-			
-			//already in the inventory
-			int newQty;
-			newQty = retrieved.getQuantity() + temp.getQuantity();
-			message = rest.addTiresToInventory(retrieved, newQty);
-			
-		} else {
-			temp.setBarcode(barcodeField.getText());
 
-			temp.setBrand(brandField.getText());
-			temp.setTireModel(modelField.getText());
-			temp.setWidth(Integer.parseInt(widthBox.getValue()));
-			temp.setAspectRatio(Integer.parseInt(aspectBox.getValue()));
-			temp.setRimSize(Integer.parseInt(rimSizeBox.getValue()));
-			temp.setType(typeBox.getValue());
-			temp.setQuantity(Integer.parseInt(qtyBox.getValue()));
-
-			
-			message = rest.addNewTire(temp);
-		}
+		Alert alert = new Alert(AlertType.CONFIRMATION, "Tires added to inventory", ButtonType.OK);
+		alert.showAndWait();
 		
-		
-/*		boolean found = false;
-		int newQty = 0;
-		for(Tire t : retrieved) {
-			if(t.toString().equals(temp.toString())) {
-				//tire already in database
-				newQty = t.getQuantity() + temp.getQuantity();
-				temp = t;
-				temp.setQuantity(newQty);
-				found = true;
-				break;
-			}
-		}
-		
-		if(found == true && newQty != 0) {
-			//was already in the database, so update
-			rest.addTiresToInventory(temp, newQty);
-		} else {
-			//not already in database, so create new
-			rest.addNewTire(temp);
-		}      
-		
-		String message = rest.addNewTire(temp);
-		
-		
-		
-		Alert alert = new Alert(AlertType.NONE, message, ButtonType.OK);
-		alert.showAndWait();*/
+		//clear all fields
+		brandField.setText("");
+		modelField.setText("");
 	}
 	
+	/**
+	 * returns to the last tab that was being used
+	 * @param ae
+	 */
 	@FXML protected void cancelButtonHandler(ActionEvent ae) {
 		mainController.backTab();
 	}
