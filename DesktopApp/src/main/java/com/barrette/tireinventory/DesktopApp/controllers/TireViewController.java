@@ -13,6 +13,7 @@ public class TireViewController {
 	@FXML private Label tireSize;
 	@FXML private Label type;
 	@FXML private Label quantity;
+	@FXML private Label newOrUsed;
 	@FXML private ComboBox<String> qty;
 
 	private Tire thisTire;
@@ -29,6 +30,12 @@ public class TireViewController {
 		tireSize.setText(size);
 		type.setText(tire.getType());
 		quantity.setText("Quantity on hand: " + tire.getQuantity());
+
+		if(tire.getIsNew()) {
+			newOrUsed.setText("New");
+		} else {
+			newOrUsed.setText("Used");
+		}
 		
 		for(int i = 1; i <= tire.getQuantity(); ++i) {
 			qty.getItems().add(Integer.toString(i));
@@ -55,6 +62,8 @@ public class TireViewController {
 		Alert alert = new Alert(AlertType.NONE, message, ButtonType.OK);
 		alert.showAndWait();
 	*/	
-		updateView(thisTire);
+		int newValue = thisTire.getQuantity() - Integer.parseInt(qty.getValue());
+		
+		quantity.setText("Quantity on hand: " + Integer.toString(newValue));
 	}
 }

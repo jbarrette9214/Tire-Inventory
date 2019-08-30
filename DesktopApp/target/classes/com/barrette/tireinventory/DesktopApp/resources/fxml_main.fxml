@@ -26,7 +26,7 @@
 				<Label>R</Label>
 				<ComboBox fx:id="rimSize"></ComboBox>
 				<Label id="space">&#160;</Label>    <!-- add blank space -->
-				<Button styleClass="buttons" Text="Query" onAction="#queryButton"/>
+				<Button fx:id="queryButton" styleClass="buttons" Text="Query" onAction="#queryButton"/>
 			</HBox>
 			
 		</HBox>

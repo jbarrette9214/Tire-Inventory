@@ -27,6 +27,8 @@ public class mainController {
 	
 	@FXML private ScrollPane scroll;
 	
+	@FXML private static Button queryButton;
+	
 	private static Tab lastTab, currentTab;
 	private static SingleSelectionModel<Tab> tabSelection;
 	private Tab addNewTab, tireViewTab, existingTab;
@@ -210,6 +212,10 @@ public class mainController {
 	}
 	
 
+	public static void triggerQueryButton() {
+		queryButton.fire();
+	}
+	
 	public static void backTab() {
 		Tab temp;
 		

@@ -43,11 +43,12 @@ public class DAO {
 				createDB();
 				System.out.println("Created DB");
 			}
-			
 			conn = DriverManager.getConnection("jdbc:h2:~/tire_inventory", USER, PASS);
-		} catch (SQLException e) {
+		} catch (SQLException  e) {
 			
 			Alert alert = new Alert(AlertType.ERROR, "Unable to connect to database, may be open already", ButtonType.OK);
+			e.printStackTrace();
+
 			alert.showAndWait();
 			System.exit(0);
 		}
@@ -93,8 +94,8 @@ public class DAO {
 	 */
 	public List<Tire> getTiresBySize(int width, int aspect, int rim) {
 		
-		String query = "select * from tire_inventory where width = " + width + ", aspect_ratio=" + aspect +
-						", rim_size=" + rim + ";";
+		String query = "select * from tire_inventory where WIDTH=" + width + "and aspect_ratio=" + aspect +
+						"and rim_size=" + rim + ";";
 		try {
 			Statement stmt = conn.createStatement();
 			
@@ -209,14 +210,14 @@ public class DAO {
 				quantity = tire.getQuantity() + amountIncrement;
 			}
 			
-			String update = "update tire_inventory quantity=" + quantity + " where id=" + tire.getId() +";";
+			String update = "update tire_inventory set quantity=" + quantity + " where id=" + tire.getId() +";";
 
 			stmt.executeUpdate(update);
 			
 			stmt.close();
 		
 		} catch (SQLException e) {
-			
+			e.printStackTrace();
 		}
 		
 	}
@@ -239,7 +240,7 @@ public class DAO {
 				quantity = tire.getQuantity() - amountDecrement;
 			}
 			
-			String update = "update tire_inventory quantity=" + quantity + " where id=" + tire.getId() +";";
+			String update = "update tire_inventory set quantity=" + quantity + " where id=" + tire.getId() +";";
 
 			stmt.executeUpdate(update);
 			

@@ -59,7 +59,6 @@ public class AddExistingController {
 		
 		//make sure a quantity was selected
 		if(qtyCombo.getSelectionModel().getSelectedItem() != null  && temp != null) {
-			
 			App.dao.incrementQuantity(temp, Integer.parseInt(qtyCombo.getValue()));
 			
 			
