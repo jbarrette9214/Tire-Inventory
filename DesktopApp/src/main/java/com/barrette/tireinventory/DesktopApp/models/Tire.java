@@ -64,7 +64,7 @@ public class Tire {
 	}
 	
 	public void setTireModel(String model) {
-		tire_model = model;
+		tire_model = model.toUpperCase();
 	}
 	
 	public int getWidth() {
@@ -96,7 +96,7 @@ public class Tire {
 	}
 	
 	public void setType(String strType) {
-		tire_type = strType;
+		tire_type = strType.toUpperCase();
 	}
 	
 	public int getQuantity() {

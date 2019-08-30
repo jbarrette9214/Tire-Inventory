@@ -43,6 +43,9 @@
 	-fx-min-height: 30px;
 }
 
+.sizeTextField {
+	-fx-pref-width:200px;
+}
 
 #setupButton {
 	-fx-min-height: 30px;

@@ -22,6 +22,7 @@ public class mainController {
 	@FXML private ComboBox<String> tireWidth;
 	@FXML private ComboBox<String> aspectRatio;
 	@FXML private ComboBox<String> rimSize;
+	@FXML private TextField sizeTextField;
 	@FXML private Label message;
 	@FXML private VBox mainPane;
 	
@@ -184,16 +185,29 @@ public class mainController {
 		
 		lastTab = currentTab;
 		currentTab = tireViewTab;
-				
 		
+		List<Tire> tiresRetrieved = null;
+		if(sizeTextField.getText().length() == 7) {
+			tiresRetrieved = App.dao.getTiresBySize(Integer.parseInt(sizeTextField.getText().substring(0, 3)), 
+					Integer.parseInt(sizeTextField.getText().substring(3, 5)), 
+					Integer.parseInt(sizeTextField.getText().substring(5,7)));
+		} else if (sizeTextField.getText().length() == 9) {
+			tiresRetrieved = App.dao.getTiresBySize(Integer.parseInt(sizeTextField.getText().substring(0,3)),
+					Integer.parseInt(sizeTextField.getText().substring(4,6)), 
+					Integer.parseInt(sizeTextField.getText().substring(7,9)));
+		} else {
 		
-		List<Tire> tiresRetrieved = App.dao.getTiresBySize(Integer.parseInt(tireWidth.getValue()), 
+			tiresRetrieved = App.dao.getTiresBySize(Integer.parseInt(tireWidth.getValue()), 
 				Integer.parseInt(aspectRatio.getValue()), Integer.parseInt(rimSize.getValue()));
+		}
 		
+		sizeTextField.setText("");
+
 		
 		VBox tirePane = new VBox();
 		
-		if(tiresRetrieved != null) {
+		
+		if(tiresRetrieved != null && !tiresRetrieved.isEmpty()) {
 			for(Tire t : tiresRetrieved) {
 				tirePane.getChildren().add(t.getTireView());
 			}
@@ -207,6 +221,7 @@ public class mainController {
 		tireViewTab.setContent(tirePane);
 		
 		tabSelection.select(tireViewTab);
+
 		
 		message.setText("Ready");
 	}

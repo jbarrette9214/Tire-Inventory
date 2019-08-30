@@ -21,6 +21,7 @@
 			</HBox>
 			
 			<HBox id="right" HBox.hgrow="ALWAYS">
+				<TextField fx:id="sizeTextField"/>
 				<ComboBox fx:id="tireWidth"></ComboBox>
 				<ComboBox fx:id="aspectRatio"></ComboBox>
 				<Label>R</Label>
