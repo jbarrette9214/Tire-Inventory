@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<HBox fx:controller="com.barrette.tireinventory.DesktopApp.controllers.printViewController" xmlns:fx="http://javafx.com/fxml/1"
+		HBox.hgrow="always" spacing="20" stylesheets="@style/printViewStyle.css">
+
+
+	<Label fx:id="brandModel"/>
+	<Label fx:id="tireSize"/>
+	<Label fx:id="newOrUsed"/>
+	<Label fx:id="qtyLabel"/>
+
+
+
+
+</HBox>
+

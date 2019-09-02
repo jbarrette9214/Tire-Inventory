@@ -30,5 +30,8 @@ Button {
 	-fx-padding:50px;
 }
 
+.bottom {
+	-fx-alignment:center-right;
+}
 
 

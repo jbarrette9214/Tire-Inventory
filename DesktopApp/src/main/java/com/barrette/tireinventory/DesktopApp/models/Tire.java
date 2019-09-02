@@ -140,6 +140,28 @@ public class Tire {
 		return pane;
 	}
 	
+	public HBox getPrintView() {
+		HBox pane = new HBox();
+		printViewController controller = null;
+		try {
+			FXMLLoader loader = new FXMLLoader(App.class.getResource("resources/printViewModel.fxml"));
+			
+			pane = loader.load();
+			
+			controller = (printViewController)loader.getController();
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+		
+		//make sure controller was loaded
+		if(controller != null) {
+			controller.updateView(this);
+		}
+		
+		return pane;
+	}
+	
+	
 	@Override
 	public String toString() {
 		String str = this.brand + " " + this.tire_model + "    " + this.width + "/" + this.aspect_ratio + "R" + 

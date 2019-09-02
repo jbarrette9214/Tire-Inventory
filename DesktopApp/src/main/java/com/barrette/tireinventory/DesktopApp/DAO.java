@@ -85,6 +85,31 @@ public class DAO {
 		}
 	}
 	
+	public List<Tire> getEntireInventory() {
+		tires.clear();
+		
+		String sql = "select * from tire_inventory where quantity>0;";
+		
+		try {
+			
+			Statement stmt = conn.createStatement();
+			
+			ResultSet rs = stmt.executeQuery(sql);
+			
+			tires = convertResultsToList(rs);
+			
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		if(!tires.isEmpty() ) {
+			return tires;
+		} else {
+			return null;
+		}
+	}
+	
 	/**
 	 * get all the tires stored in the database of a specific size
 	 * @param width

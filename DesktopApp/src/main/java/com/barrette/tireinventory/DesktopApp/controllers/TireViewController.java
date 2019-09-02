@@ -1,11 +1,14 @@
 package com.barrette.tireinventory.DesktopApp.controllers;
 
+import java.util.List;
+
 import com.barrette.tireinventory.DesktopApp.App;
 import com.barrette.tireinventory.DesktopApp.models.Tire;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.HBox;
 
 public class TireViewController {
 
@@ -40,7 +43,7 @@ public class TireViewController {
 		for(int i = 1; i <= tire.getQuantity(); ++i) {
 			qty.getItems().add(Integer.toString(i));
 		}
-		
+	
 	}
 	
 	/**

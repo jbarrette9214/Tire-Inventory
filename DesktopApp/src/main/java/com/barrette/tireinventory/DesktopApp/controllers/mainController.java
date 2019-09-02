@@ -149,7 +149,7 @@ public class mainController {
 		lastTab = currentTab;
 		currentTab = tireViewTab;
 		
-		
+	
 		List<Tire> tiresRetrieved = App.dao.getAllTires();
 		
 		VBox tirePane = new VBox();
@@ -164,7 +164,6 @@ public class mainController {
 			
 			tirePane.getChildren().add(nothing);
 		}
-		
 		
 		tireViewTab.setContent(null);
 		tireViewTab.setContent(tirePane);

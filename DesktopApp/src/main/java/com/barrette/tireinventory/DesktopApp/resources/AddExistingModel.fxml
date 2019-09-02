@@ -4,6 +4,7 @@
 
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
 
 <BorderPane fx:controller="com.barrette.tireinventory.DesktopApp.controllers.AddExistingController" xmlns:fx="http://javafx.com/fxml/1">
 	<stylesheets>
@@ -32,6 +33,11 @@
 	
 	</center>
 	
+	<bottom>
+		<AnchorPane >
+			<Button text="Print Inventory Sheet" onAction="#printButton"/>
+		</AnchorPane>
+	</bottom>
 	
 </BorderPane>
 
