@@ -1,8 +1,12 @@
 package com.barrette.tireinventory.DesktopApp.controllers;
 
 import com.barrette.tireinventory.DesktopApp.App;
+import com.barrette.tireinventory.DesktopApp.DAO;
 import com.barrette.tireinventory.DesktopApp.models.*;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +26,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 
 public class AddExistingController {
 
@@ -126,6 +131,44 @@ public class AddExistingController {
 			
 		
 		} 
+		
+	}
+	
+	/**
+	 * used to bring up a window to choose where to make a backup copy
+	 * @param ae
+	 */
+	@FXML protected void backupButton(ActionEvent ae) {
+		FileChooser chooser = new FileChooser();
+		chooser.setTitle("Backup Database");
+	
+		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("H2 database file   *.mv.db","*.mv.db");
+		chooser.getExtensionFilters().add(filter);
+		
+
+		//set the directory for the chooser to dart with
+		String userDir = System.getProperty("user.home");
+		File startDir = new File(userDir);
+		
+		chooser.setInitialDirectory(startDir);
+		
+		File output = chooser.showSaveDialog(App.mainStage);
+		
+		
+		if(output != null) {
+			try {
+				App.dao.closeConnection();
+				String userHome = System.getProperty("user.home") + "/tire_inventory.mv.db";
+
+				File original = new File(userHome);
+				Files.copy(original.toPath(), output.toPath());
+				
+				App.dao = null;
+				App.dao = new DAO();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		
 	}
 	

@@ -19,6 +19,7 @@ public class App extends Application
 {
 
 	public static DAO dao;
+	public static Stage mainStage;
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -47,6 +48,8 @@ public class App extends Application
 		primary.setTitle("Tire Inventory");
 		primary.setScene(mainScene);
 		primary.setResizable(false);
+		
+		mainStage = primary;
 		
 		primary.show();
 

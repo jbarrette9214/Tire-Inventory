@@ -34,9 +34,10 @@
 	</center>
 	
 	<bottom>
-		<AnchorPane >
+		<HBox spacing="25" alignment="CENTER">
 			<Button text="Print Inventory Sheet" onAction="#printButton"/>
-		</AnchorPane>
+			<Button text="Back Up" onAction="#backupButton"/>
+		</HBox>
 	</bottom>
 	
 </BorderPane>

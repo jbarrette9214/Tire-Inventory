@@ -103,7 +103,7 @@ public class mainController {
 		
 		//set the message in the message pane to ready
 		message.setText("Ready");
-
+		
 	}
 
 	/**

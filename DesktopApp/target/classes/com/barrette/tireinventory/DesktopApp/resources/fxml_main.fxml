@@ -15,8 +15,8 @@
 	<top>
 		<HBox fx:id="nav" HBox.hgrow="always">
 			<HBox id="left" HBox.hgrow="always">
-				<Button styleClass="buttons" Text="Add New" onAction="#addButton"/>
 				<Button styleClass="buttons" Text="Add Existing" onAction="#addExistingButton"/>
+				<Button styleClass="buttons" Text="Add New" onAction="#addButton"/>
 				<Button styleClass="buttons" Text="Show All" onAction="#showAllButton"/>
 			</HBox>
 			

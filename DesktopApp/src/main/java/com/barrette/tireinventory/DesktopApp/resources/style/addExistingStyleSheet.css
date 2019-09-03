@@ -19,6 +19,7 @@ Button {
 
 .center {
 	-fx-alignment:top-center;
+	-fx-pref-height: 725px;
 }
 
 .h2 {

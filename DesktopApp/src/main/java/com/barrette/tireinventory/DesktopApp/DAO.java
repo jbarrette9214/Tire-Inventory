@@ -54,6 +54,15 @@ public class DAO {
 		}
 		
 	}
+	
+	public void closeConnection() {
+		
+		try {
+			conn.close();
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * gets all the tires from the database
