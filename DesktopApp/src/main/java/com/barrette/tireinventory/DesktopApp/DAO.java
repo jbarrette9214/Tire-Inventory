@@ -46,6 +46,14 @@ public class DAO {
 					//show dialog to pick backup file
 					FileChooser fileChooser = new FileChooser();
 					fileChooser.setTitle("Open Backup Database");
+					
+					//set the directory for the chooser to dart with
+					String userDir = System.getProperty("user.home");
+					File startDir = new File(userDir);
+					
+					fileChooser.setInitialDirectory(startDir);
+
+					
 					File file = fileChooser.showOpenDialog(null);
 					
 					if(file != null) {
