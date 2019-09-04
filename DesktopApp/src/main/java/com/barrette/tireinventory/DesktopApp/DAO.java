@@ -1,5 +1,8 @@
 package com.barrette.tireinventory.DesktopApp;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,12 +11,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.barrette.tireinventory.DesktopApp.models.Tire;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.stage.FileChooser;
 
 public class DAO {
 	
@@ -30,19 +35,48 @@ public class DAO {
 			String userHome = System.getProperty("user.home") + "/tire_inventory.mv.db";
 			
 			if(!Paths.get(userHome).toFile().exists()) {
-/*				Alert alert = new Alert(AlertType.CONFIRMATION, "Database doesn't exist, create one?",
-										ButtonType.YES, ButtonType.NO);
-				alert.showAndWait();
+				Alert alert = new Alert(AlertType.INFORMATION, "Database doesn't exist, load from backup",
+						ButtonType.YES, ButtonType.NO);
 				
-				if(alert.getResult() == ButtonType.YES) {
-					createDB();
-				} else {
+				Optional<ButtonType> result = alert.showAndWait();
+				
+				if(result == null) {
 					System.exit(0);
+				}else if(result.get() == ButtonType.YES) {
+					//show dialog to pick backup file
+					FileChooser fileChooser = new FileChooser();
+					fileChooser.setTitle("Open Backup Database");
+					File file = fileChooser.showOpenDialog(null);
+					
+					if(file != null) {
+						try {
+							String userhome = System.getProperty("user.home") + "/tire_inventory.mv.db";
+
+							File newCopy = new File(userhome);
+							Files.copy(file.toPath(), newCopy.toPath());
+							
+							App.dao = null;
+							App.dao = new DAO();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					} else {
+						System.exit(0);
+					}
+					
+				} else if(result.get() == ButtonType.NO) {
+					Alert alert2 = new Alert(AlertType.CONFIRMATION, "Create new database", ButtonType.YES,
+											ButtonType.NO);
+					
+					result = alert.showAndWait();
+					if(result.get() == ButtonType.NO) {
+						System.exit(0);
+					}
+					createDB();
+					
 				}
-*/
-				createDB();
-				System.out.println("Created DB");
-			}
+				
+			} 
 			conn = DriverManager.getConnection("jdbc:h2:~/tire_inventory", USER, PASS);
 		} catch (SQLException  e) {
 			
