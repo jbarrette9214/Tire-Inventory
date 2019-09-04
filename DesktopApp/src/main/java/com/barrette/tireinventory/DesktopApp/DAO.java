@@ -76,7 +76,7 @@ public class DAO {
 					Alert alert2 = new Alert(AlertType.CONFIRMATION, "Create new database", ButtonType.YES,
 											ButtonType.NO);
 					
-					result = alert.showAndWait();
+					result = alert2.showAndWait();
 					if(result.get() == ButtonType.NO) {
 						System.exit(0);
 					}
