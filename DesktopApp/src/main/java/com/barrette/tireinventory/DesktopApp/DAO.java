@@ -113,7 +113,7 @@ public class DAO {
 	public List<Tire> getAllTires() {
 		tires.clear();
 		
-		String query = "select * from tire_inventory;";
+		String query = "select * from tire_inventory order by rim_size;";
 		
 		try {
 			Statement stmt = conn.createStatement();
@@ -124,6 +124,7 @@ public class DAO {
 			tires = convertResultsToList(rs);
 			
 			stmt.close();
+			rs.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -139,7 +140,7 @@ public class DAO {
 	public List<Tire> getEntireInventory() {
 		tires.clear();
 		
-		String sql = "select * from tire_inventory where quantity>0;";
+		String sql = "select * from tire_inventory where quantity>0 order by rim_size;";
 		
 		try {
 			
@@ -150,6 +151,7 @@ public class DAO {
 			tires = convertResultsToList(rs);
 			
 			stmt.close();
+			rs.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -180,8 +182,9 @@ public class DAO {
 			tires = convertResultsToList(rs);
 			
 			stmt.close();
+			rs.close();
 		} catch (SQLException e) {
-			
+			e.printStackTrace();
 		}
 		
 		
@@ -219,8 +222,9 @@ public class DAO {
 			}
 			
 			stmt.close();
+			rs.close();
 		} catch (SQLException e) {
-			
+			e.printStackTrace();
 		}
 		
 		
@@ -259,7 +263,7 @@ public class DAO {
 				
 				stmt.close();
 			} catch (SQLException e) {
-				System.err.println(e);
+				e.printStackTrace();
 			}
 		}
 		
@@ -291,7 +295,7 @@ public class DAO {
 			stmt.executeUpdate(update);
 			
 			stmt.close();
-		
+			rs.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -314,16 +318,18 @@ public class DAO {
 
 			if(quantity != -1 && tire.getQuantity() >= amountDecrement) {
 				quantity = tire.getQuantity() - amountDecrement;
-			}
 			
-			String update = "update tire_inventory set quantity=" + quantity + " where id=" + tire.getId() +";";
 
-			stmt.executeUpdate(update);
-			
+				String update = "update tire_inventory set quantity=" + quantity + " where id=" + tire.getId() +";";
+
+				stmt.executeUpdate(update);
+
+			}
+						
 			stmt.close();
-		
+			rs.close();
 		} catch (SQLException e) {
-			
+			e.printStackTrace();
 		}
 	}
 	
@@ -348,13 +354,105 @@ public class DAO {
 			}
 			
 			stmt.close();
+			rs.close();
 		} catch (SQLException e) {
-			
+			e.printStackTrace();
 		}
 		
 		return -1;
 	}
 	
+	public List<Integer> getWidths() {
+		List<Integer> widths = new ArrayList<Integer>();
+		
+		String sql = "select distinct width from tire_inventory order by width;";
+		
+		try {
+			Statement stmt = conn.createStatement();
+			
+			ResultSet rs = stmt.executeQuery(sql);
+			
+			while(rs.next()) {
+				widths.add(rs.getInt("width"));
+			}
+			
+			stmt.close();
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		return widths;
+	}
+	
+	
+	public List<Integer> getAspects() {
+		List<Integer> aspects = new ArrayList<Integer>();
+		
+		String sql = "select distinct aspect_ratio from tire_inventory order by aspect_ratio;";
+		
+		try {
+			Statement stmt = conn.createStatement();
+			
+			ResultSet rs = stmt.executeQuery(sql);
+			
+			while(rs.next()) {
+				aspects.add(rs.getInt("aspect_ratio"));
+			}
+			
+			stmt.close();
+			rs.close();
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return aspects;
+	}
+	
+	public List<Integer> getRimSizes() {
+		List<Integer> rims = new ArrayList<Integer>();
+		
+		String sql = "select distinct rim_size from tire_inventory order by rim_size;";
+		
+		try {
+			Statement stmt = conn.createStatement();
+			
+			ResultSet rs = stmt.executeQuery(sql);
+			
+			while(rs.next()) {
+				rims.add(rs.getInt("rim_size"));
+			}
+			
+			stmt.close();
+			rs.close();
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return rims;
+	}
+	
+	
+	public Integer getTireCount() {
+		String sql = "select sum(quantity) as count from tire_inventory;";
+		
+		int total = 0;
+		
+		try {
+			Statement stmt = conn.createStatement();
+			
+			ResultSet rs = stmt.executeQuery(sql);
+			
+			while(rs.next()) {
+				total = rs.getInt("count");
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return total;
+	}
 	
 	/**
 	 * used to convert the result set into a list

@@ -111,7 +111,8 @@ public class AddExistingController {
 			pane.getChildren().add(toAdd);
 		}
 		
-
+		
+		
 		Printer printer = Printer.getDefaultPrinter();
 		PrinterJob job = PrinterJob.createPrinterJob();
 

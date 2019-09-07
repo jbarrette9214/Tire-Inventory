@@ -43,7 +43,7 @@ public class App extends Application
 		
 		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 		
-		Scene mainScene = new Scene(root, screen.getWidth() - 100, screen.getHeight() - 100);
+		Scene mainScene = new Scene(root, screen.getWidth() - 100, screen.getHeight() - 150);
 		
 		primary.setTitle("Tire Inventory");
 		primary.setScene(mainScene);
@@ -54,4 +54,11 @@ public class App extends Application
 		primary.show();
 
 	}
+	
+	
+	@Override
+	public void stop() {
+		dao.closeConnection();
+	}
+	
 }

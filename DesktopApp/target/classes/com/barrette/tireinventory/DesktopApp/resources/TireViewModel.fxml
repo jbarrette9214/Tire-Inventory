@@ -11,9 +11,11 @@
  	 
 	<VBox id="leftColumn">
 		<Label fx:id="brand_model" styleClass="h1"></Label>
-		<Label fx:id="tireSize" styleClass="h2"></Label>
-		<Label fx:id="type" styleClass="h2"></Label>
-		<Label fx:id="newOrUsed" styleClass="h2"/>
+		<Label fx:id="tireSize" styleClass="h1"></Label>
+		<HBox>
+			<Label fx:id="type" styleClass="h2"></Label>
+			<Label fx:id="newOrUsed" styleClass="h2"/>
+		</HBox>
 	</VBox>
 	
 
