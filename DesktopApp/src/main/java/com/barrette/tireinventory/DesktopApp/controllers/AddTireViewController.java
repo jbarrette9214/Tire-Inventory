@@ -27,14 +27,15 @@ public class AddTireViewController {
 		brandField.setText("");
 		modelField.setText("");
 		
-		String[] widths = {"<175","185", "195", "205", "215", "225", "235", "245", "255", "265", "275", "285", ">295"};
+		String[] widths = {"175","185", "195", "205", "215", "225", "235", "245", "255", "265", "275", "285", "295",
+				"305", "315", "325"};
 		
 		widthBox.getItems().setAll(widths);
 		
 		String[] aspect = {"40", "45", "50", "55", "60", "65", "70", "75", "80", "85" };
 		aspectBox.getItems().setAll(aspect);
 		
-		String[] rim = {"13", "14", "15", "16", "17", "18", "19", "20", "21", "22"};
+		String[] rim = { "13", "14", "15", "16", "17", "18", "19", "20", "21", "22"};
 		rimSizeBox.getItems().setAll(rim);
 		
 		String[] types = {"All-Season", "Light Truck", "Snow", "Performance"};
@@ -46,8 +47,9 @@ public class AddTireViewController {
 		newUsedBox.getSelectionModel().selectFirst();
 		
 		
-		String[] qty = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
+		String[] qty = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
 		qtyBox.getItems().setAll(qty);
+		
 
 	}
 	
@@ -70,11 +72,17 @@ public class AddTireViewController {
 		}
 		
 		temp.setBrand(brandField.getText());
-		temp.setTireModel(modelField.getText());
+		if(newUsedBox.getSelectionModel().getSelectedItem().equals("Used")) {
+			temp.setTireModel(modelField.getText() + "*");
+			temp.setIsNew(false);
+		} else {
+			temp.setTireModel(modelField.getText());
+			temp.setIsNew(true);
+		}
 		temp.setWidth(Integer.parseInt(widthBox.getValue()));
 		temp.setAspectRatio(Integer.parseInt(aspectBox.getValue()));
 		temp.setRimSize(Integer.parseInt(rimSizeBox.getValue()));
-		
+		temp.setQuantity(Integer.parseInt(qtyBox.getValue()));
 		
 		int id = App.dao.checkForTire(temp);
 		if(id != -1) {
@@ -84,7 +92,6 @@ public class AddTireViewController {
 			Alert alert = new Alert(AlertType.CONFIRMATION, "Tire already in database, updating quantity", ButtonType.OK);
 			alert.showAndWait();
 
-			
 			App.dao.incrementQuantity(temp, Integer.parseInt(qtyBox.getValue()));
 		} else {
 			temp.setType(typeBox.getValue());
@@ -97,6 +104,8 @@ public class AddTireViewController {
 		//clear all fields
 		brandField.setText("");
 		modelField.setText("");
+		
+		reset();
 	}
 	
 	/**
@@ -108,6 +117,11 @@ public class AddTireViewController {
 	}
 	
 	public void reset() {
+		qtyBox.getItems().clear();
+		widthBox.getItems().clear();
+		aspectBox.getItems().clear();
+		rimSizeBox.getItems().clear();
+		
 		initialize();
 	}
 	

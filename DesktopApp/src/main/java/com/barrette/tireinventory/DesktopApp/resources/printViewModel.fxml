@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 
 <HBox fx:controller="com.barrette.tireinventory.DesktopApp.controllers.printViewController" xmlns:fx="http://javafx.com/fxml/1"
-		HBox.hgrow="always" spacing="20" stylesheets="@style/printViewStyle.css">
+		HBox.hgrow="always" spacing="0" stylesheets="@style/printViewStyle.css">
 
 
 	<Label fx:id="brandModel"/>

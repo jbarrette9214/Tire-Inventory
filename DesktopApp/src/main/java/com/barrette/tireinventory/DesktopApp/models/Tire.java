@@ -165,8 +165,11 @@ public class Tire {
 	@Override
 	public String toString() {
 		String str = this.brand + " " + this.tire_model + "    " + this.width + "/" + this.aspect_ratio + "R" + 
-				this.rim_size + "    " + this.tire_type;
+				this.rim_size + "    " + this.tire_type + "    ";
 		
+		if(!isNew) {
+			str = str + "USED";
+		}
 		return str;
 	}
 	

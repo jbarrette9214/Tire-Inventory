@@ -1,3 +1,15 @@
 Label {
 	-fx-font-size: 12;
 }
+
+#brandModel {
+	-fx-pref-width:2in;
+}
+
+#tireSize {
+	-fx-pref-width:1in;
+}
+
+#newOrUsed {
+	-fx-pref-width:1in;
+}

@@ -7,6 +7,9 @@ import com.barrette.tireinventory.DesktopApp.models.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,9 +43,9 @@ public class AddExistingController {
 	 */
 	@FXML public void initialize() {
 		//fill the quantity box
-		String[] qty = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
+		String[] qty = {"0,", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
 		qtyCombo.getItems().setAll(qty);
-		
+		qtyCombo.getSelectionModel().selectFirst();
 				
 		
 		retrieved = App.dao.getAllTires();
@@ -73,11 +76,11 @@ public class AddExistingController {
 		}
 		
 		//make sure a quantity was selected
-		if(qtyCombo.getSelectionModel().getSelectedItem() != null  && temp != null) {
+		if(qtyCombo.getSelectionModel().getSelectedItem() != "0"  && temp != null) {
 			App.dao.incrementQuantity(temp, Integer.parseInt(qtyCombo.getValue()));
 			
-			
-			
+			Alert alert = new Alert(AlertType.CONFIRMATION, "Tires added to inventory", ButtonType.OK);
+			alert.showAndWait();
 		}
 		
 	}
@@ -99,17 +102,17 @@ public class AddExistingController {
 		
 		VBox pane = new VBox();
 		
-		Label title = new Label();
-		title.setText("Inventory");
-		title.setStyle("-fx-font: 24 arial;");
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+		LocalDateTime now = LocalDateTime.now();
 		
+		
+		Label title = new Label();
+		title.setText("Inventory    " + dtf.format(now));
+		title.setStyle("-fx-font: 24 arial;");
+	
+		pane.getChildren().add(title);
 		List<Tire> inventory = App.dao.getEntireInventory();
 		
-		
-		for(Tire t : inventory) {
-			HBox toAdd = t.getPrintView();
-			pane.getChildren().add(toAdd);
-		}
 		
 		
 		
@@ -117,18 +120,63 @@ public class AddExistingController {
 		PrinterJob job = PrinterJob.createPrinterJob();
 
 		PageLayout pageLayout = printer.createPageLayout(Paper.A4,  PageOrientation.PORTRAIT, 
-				Printer.MarginType.DEFAULT);
+				0.5,0.5,0.5,0.5);
 				
 		Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure you want to print inventory", 
 								ButtonType.YES, ButtonType.NO);
 		Optional<ButtonType> result = alert.showAndWait();
 		
-		if(job != null && result.get() == ButtonType.YES ) {
+		List<Label> labels = new ArrayList<Label>();
 		
-			boolean success = job.printPage(pageLayout, pane);
-			if(success) {
-				job.endJob();
+		if(job != null && result.get() == ButtonType.YES ) {
+
+			int counter = 0;
+			int rim = 0;
+			for(Tire t : inventory) {
+				++counter;
+				if(rim != t.getRimSize()) {
+					Label spacer = new Label();
+					spacer.setText("~");
+					
+					labels.add(spacer);
+					spacer = null;
+					pane.getChildren().add(labels.get(labels.size()-1));
+					
+
+					rim = t.getRimSize();
+					Label rimSizes = new Label();
+					rimSizes.setText(rim + " inch tires");
+					labels.add(rimSizes);
+					rimSizes = null;
+					pane.getChildren().add(labels.get(labels.size()-1));
+					
+					Label spacer2 = new Label();
+					spacer2.setText("~");
+					labels.add(spacer2);
+					pane.getChildren().add(labels.get(labels.size()-1));
+				}
+				if(counter == 28) {
+					counter = 0;
+					boolean success = job.printPage(pageLayout, pane);
+					pane.getChildren().clear();
+					
+					Label topDate = new Label();
+					topDate.setText(dtf.format(now));
+					labels.add(topDate);
+					pane.getChildren().add(labels.get(labels.size()-1));
+					Label space = new Label();
+					space.setText(" ");
+					labels.add(space);
+					pane.getChildren().add(labels.get(labels.size()-1));
+				}
+				HBox toAdd = t.getPrintView();
+				pane.getChildren().add(toAdd);
 			}
+
+			job.printPage(pageLayout, pane);
+
+			job.endJob();
+
 			
 		
 		} 

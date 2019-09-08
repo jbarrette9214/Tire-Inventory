@@ -113,7 +113,7 @@ public class DAO {
 	public List<Tire> getAllTires() {
 		tires.clear();
 		
-		String query = "select * from tire_inventory order by rim_size;";
+		String query = "select * from tire_inventory order by rim_size, width, aspect_ratio;";
 		
 		try {
 			Statement stmt = conn.createStatement();
@@ -140,7 +140,7 @@ public class DAO {
 	public List<Tire> getEntireInventory() {
 		tires.clear();
 		
-		String sql = "select * from tire_inventory where quantity>0 order by rim_size;";
+		String sql = "select * from tire_inventory where quantity>0 order by rim_size, width, aspect_ratio;";
 		
 		try {
 			
@@ -342,8 +342,8 @@ public class DAO {
 	 */
 	public int checkForTire(Tire tire) {
 		
-		String query = "select id from tire_inventory where brand =" + tire.getBrand() + ", width=" + tire.getWidth() +
-						", aspect_ratio=" + tire.getAspectRatio() + ", rim_size=" + tire.getRimSize() + ";";
+		String query = "select id from tire_inventory where brand ='" + tire.getBrand() + "' AND tire_model ='" + tire.getTireModel() + "' AND width=" + tire.getWidth() +
+						"AND aspect_ratio=" + tire.getAspectRatio() + "AND rim_size=" + tire.getRimSize() + ";";
 		try {
 			Statement stmt = conn.createStatement();
 			
