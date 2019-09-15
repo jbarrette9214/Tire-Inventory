@@ -1,0 +1,18 @@
+BorderPane {
+	-fx-padding:0 0 0 0;
+}
+
+ScrollPane {
+	-fx-padding:0 0 0 0;
+	-fx-pref-width:1500px;
+	-fx-border-color:red;
+}
+
+.center {
+	-fx-alignment: top-center;
+	-fx-border-color:blue;
+}
+
+Label {
+	-fx-font-size: 2em;
+}

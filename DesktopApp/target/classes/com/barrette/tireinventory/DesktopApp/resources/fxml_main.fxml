@@ -36,7 +36,7 @@
 
 
 	<center>
-		<ScrollPane fx:id="scroll">
+<!-- 		<ScrollPane fx:id="scroll">  
 			<VBox fx:id="mainPane">
 				
 				
@@ -44,7 +44,10 @@
 		
 			</VBox>	
 		
-		</ScrollPane>
+ 		</ScrollPane>   -->
+ 		<VBox fx:id="mainPane">
+ 		
+ 		</VBox>  
 			
 	</center>
 

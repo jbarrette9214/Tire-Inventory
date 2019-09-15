@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<BorderPane fx:controller="com.barrette.tireinventory.DesktopApp.controllers.AllTireViewController" 
+		xmlns:fx="http://javafx.com/fxml/1">
+		
+	<stylesheets>
+		<URL value="@style/AllTireViewStyle.css"/>
+	</stylesheets>
+	<center>
+		<HBox HBox.hgrow="always">
+			<ScrollPane fx:id="scrollPane" styleClass="center">
+			</ScrollPane>
+		
+		</HBox>
+		
+	</center>	
+	
+</BorderPane>
+

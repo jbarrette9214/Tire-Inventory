@@ -38,6 +38,7 @@ public class mainController {
 	
 	private AddTireViewController addController;
 	private AddExistingController existingController;
+	private AllTireViewController scrollController;
 	
 	/**
 	 * <p> initializes all the comboboxes of the nav panel, and sets the message to ready in the message panel</o>
@@ -88,7 +89,25 @@ public class mainController {
 		addNewTab = new Tab();
 		addNewTab.setContent(addPane);
 		
-				
+		
+		
+		
+		
+		FXMLLoader loader2 = new FXMLLoader(App.class.getResource("resources/AllTireView.fxml"));
+		BorderPane scrollPane = null;
+		try {
+			scrollPane = loader2.load();
+			scrollController = (AllTireViewController)loader2.getController();
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+		tireViewTab = new Tab();
+		tireViewTab.setContent(scrollPane);
+		
+		
+		
+		
+		
 		FXMLLoader loader3 = new FXMLLoader(App.class.getResource("resources/AddExistingModel.fxml"));
 		BorderPane existingPane = null;
 		try {
@@ -106,6 +125,7 @@ public class mainController {
 		
 		
 		tabPane = new TabPane();
+//		tabPane.setMaxHeight(900.0);
 		tabPane.getTabs().add(addNewTab);
 		tabPane.getTabs().add(tireViewTab);
 		tabPane.getTabs().add(existingTab);
@@ -114,7 +134,8 @@ public class mainController {
 		
 		tabSelection.select(existingTab);
 		
-		scroll.setContent(tabPane);
+		//scroll.setContent(tabPane);
+		mainPane.getChildren().add(tabPane);
 		
 		lastTab = tabSelection.getSelectedItem();
 		currentTab = tabSelection.getSelectedItem();
@@ -170,7 +191,7 @@ public class mainController {
 	
 		List<Tire> tiresRetrieved = App.dao.getAllTires();
 		
-		VBox tirePane = new VBox();
+/*		VBox tirePane = new VBox();
 		if(tiresRetrieved != null) {
 			for(Tire t : tiresRetrieved) {
 				tirePane.getChildren().add(t.getTireView());
@@ -182,11 +203,23 @@ public class mainController {
 			
 			tirePane.getChildren().add(nothing);
 		}
+
+		
 		
 		tireViewTab.setContent(null);
 		tireViewTab.setContent(tirePane);
+*/
+		
+		ScrollPane scroll = scrollController.updateView(tiresRetrieved);
+		scroll.setPrefWidth(2000);
+
+		tireViewTab.setContent(null);
+		tireViewTab.setContent(scroll);
 		
 		tabSelection.select(tireViewTab);
+	
+		
+		
 		
 		message.setText("Ready");
 	}
