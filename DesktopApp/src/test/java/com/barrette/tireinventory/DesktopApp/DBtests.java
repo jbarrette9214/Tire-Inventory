@@ -1,12 +1,19 @@
 package com.barrette.tireinventory.DesktopApp;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Calendar;
+import java.util.Date;
+
 import com.barrette.tireinventory.DesktopApp.models.Tire;
 
 public class DBtests {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		DAO dao = new DAO();
+		//DAO dao = new DAO();
 		
 		
 		/*
@@ -49,7 +56,40 @@ public class DBtests {
 		dao.addTireToDatabase(tire3);
 		*/
 		
+		//run this try block to add the table for sales to the database
+		try {
+			Connection conn = DriverManager.getConnection("jdbc:h2:~/test_tire_inventory", "SA", "");
+			
+			Statement stmt = conn.createStatement();
+			
+			//create the main table to hold the tire inventory
+			String sql = "CREATE TABLE tire_inventory (id IDENTITY NOT NULL PRIMARY KEY, brand  VARCHAR NOT NULL," +
+					"tire_model VARCHAR NOT NULL, width INT NOT NULL, aspect_ratio int NOT NULL, rim_size int NOT NULL," +
+					"tire_type VARCHAR NOT NULL, new BOOLEAN NOT NULL, quantity INT NOT NULL)";
 		
+			//stmt.executeUpdate(sql);
+		
+			//get the current year
+			Date today = new Date();
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(today);
+			
+			int currentYear = cal.get(Calendar.YEAR);
+			String tableName = "sales_" + currentYear;
+			
+			//create the table to hold sales
+			sql = "CREATE TABLE " + tableName + " (id IDENTITY NOT NULL PRIMARY KEY, january INT, february INT" +
+					", march INT, april INT, may INT, june INT, july INT, august INT, september INT" +
+					", october INT, november INT, december INT);";
+			
+			stmt.executeUpdate(sql);
+			
+			stmt.close();
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		
 	}
