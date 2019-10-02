@@ -27,15 +27,20 @@ public class DAO {
 	
 	Connection conn;
 	
+	String salesTable;
+	
 	static final String USER = "sa";
 	static final String PASS = "";
+	final String dbName = "tire_inventory";			//change back to just tire_inventory before build
 	
 	private List<Tire> tires = new ArrayList<Tire>();
+	
+	private int month, year;
 	
 	public DAO() {
 		try {
 			
-			String userHome = System.getProperty("user.home") + "/tire_inventory.mv.db";
+			String userHome = System.getProperty("user.home") + "/" + dbName + ".mv.db";
 			
 			if(!Paths.get(userHome).toFile().exists()) {
 				Alert alert = new Alert(AlertType.INFORMATION, "Database doesn't exist, load from backup",
@@ -61,7 +66,7 @@ public class DAO {
 					
 					if(file != null) {
 						try {
-							String userhome = System.getProperty("user.home") + "/tire_inventory.mv.db";
+							String userhome = System.getProperty("user.home") + "/" + dbName + ".mv.db";
 
 							File newCopy = new File(userhome);
 							Files.copy(file.toPath(), newCopy.toPath());
@@ -88,25 +93,22 @@ public class DAO {
 				}
 				
 			} 
-			conn = DriverManager.getConnection("jdbc:h2:~/tire_inventory", USER, PASS);
+			conn = DriverManager.getConnection("jdbc:h2:~/" + dbName, USER, PASS);
 			
-			//check to see if a sales table exists for the current year
-			DatabaseMetaData dbm = conn.getMetaData();
 			
 			Date today = new Date();
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(today);
 			
-			int currentYear = cal.get(Calendar.YEAR);
-			String tableName = "sales_" + currentYear;
+			year = cal.get(Calendar.YEAR);
+			month = cal.get(Calendar.MONTH);
 			
-			ResultSet tables = dbm.getTables(null, null, tableName, null);
+//need to change this back used for testing only			
+//salesTable = "sales_2016";
+
+			salesTable = "sales" + year;
 			
-			if(tables.next()) {
-				//table exists;
-			} else {
-				createYearTable(tableName);
-			}
+			createYearTable(salesTable);	//create the sales table for current year, won't go through if exists
 			
 		} catch (SQLException  e) {
 			
@@ -135,7 +137,7 @@ public class DAO {
 	public List<Tire> getAllTires() {
 		tires.clear();
 		
-		String query = "select * from tire_inventory order by rim_size, width, aspect_ratio;";
+		String query = "select * from tire_inventory order by brand, tire_model, rim_size, width, aspect_ratio;";
 		
 		try {
 			Statement stmt = conn.createStatement();
@@ -332,6 +334,7 @@ public class DAO {
 		try {
 			Statement stmt = conn.createStatement();
 			
+			//decrement the quantity in the inventory
 			ResultSet rs = stmt.executeQuery(query);
 
 			while(rs.next()) {
@@ -347,7 +350,10 @@ public class DAO {
 				stmt.executeUpdate(update);
 
 			}
-						
+			
+	
+			addToSalesOnly(tire, amountDecrement);
+			
 			stmt.close();
 			rs.close();
 		} catch (SQLException e) {
@@ -355,6 +361,99 @@ public class DAO {
 		}
 	}
 	
+	/**
+	 * adds the amount of tires to the sales table
+	 * @param tire
+	 * @param amount
+	 */
+	public void addToSalesOnly(Tire tire, int amount) {
+
+		//add the sales to the sales table
+
+		String query;
+
+		
+		String monthWord = null;
+		switch(month) {
+		case 0:
+			monthWord = "january";
+			break;
+		case 1:
+			monthWord = "february";
+			break;
+		case 2:
+			monthWord = "march";
+			break;
+		case 3:
+			monthWord = "april";
+			break;
+		case 4:
+			monthWord = "may";
+			break;
+		case 5:
+			monthWord = "june";
+			break;
+		case 6:
+			monthWord = "july";
+			break;
+		case 7:
+			monthWord = "august";
+			break;
+		case 8:
+			monthWord = "september";
+			break;
+		case 9:
+			monthWord = "october";
+			break;
+		case 10:
+			monthWord = "november";
+			break;
+		case 11:
+			monthWord = "december";
+			break;
+		}
+		
+		try {
+			Statement stmt = conn.createStatement();
+
+			if(monthWord != null) {
+				//check to see if that id is in the table already
+				query = "select * from " + salesTable + " where id= " + tire.getId() + ";";
+				ResultSet rs2 = stmt.executeQuery(query);
+				
+				boolean valid = false;
+				int current = -1;
+				while(rs2.next()) {
+					valid = true;
+					current = rs2.getInt(monthWord) + amount;
+					
+				}
+				
+				if(!valid) {
+					//the current tire is not in the sales table for the current year
+					String update = "insert into " + salesTable + " (id, " + monthWord + ") values (" +
+							tire.getId() + ", " + amount + ");";
+					
+					stmt.executeUpdate(update);
+				} else {
+					//tire is already in the inventory
+					String update = "insert into " + salesTable + " (" + monthWord + ") values (" +
+							current + " where id=" + tire.getId() + ";";
+					
+					if(current != -1) {
+						stmt.executeUpdate(update);
+					}
+				}
+				rs2.close();
+			}
+			stmt.close();
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+
+	}
 	
 	/**
 	 * returns true if the tire matching that description is already in the database
@@ -380,6 +479,29 @@ public class DAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		return -1;
+	}
+
+	public int checkForTireInSales(Tire tire) {
+		
+		String query = "select * from " + salesTable + " where id=" + tire.getId();
+		try {
+			Statement stmt = conn.createStatement();
+			
+			ResultSet rs = stmt.executeQuery(query);
+			
+			while(rs.next()) {
+				int id = rs.getInt("id");
+				stmt.close();
+				rs.close();
+				return id;
+			}
+			stmt.close();
+			rs.close();
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} 
 		
 		return -1;
 	}
@@ -509,13 +631,14 @@ public class DAO {
 		return tires;
 	}
 	
+	
 	/**
 	 * creates the database if it is called
 	 */
 	private void createDB() {
 		
 		try {
-			conn = DriverManager.getConnection("jdbc:h2:~/tire_inventory", USER, PASS);
+			conn = DriverManager.getConnection("jdbc:h2:~/" + dbName, USER, PASS);
 			
 			Statement stmt = conn.createStatement();
 			
@@ -532,9 +655,9 @@ public class DAO {
 			cal.setTime(today);
 			
 			int currentYear = cal.get(Calendar.YEAR);
-			String tableName = "sales_" + currentYear;
+			String salesTable = "sales_" + currentYear;
 			
-			createYearTable(tableName);
+			createYearTable(salesTable);
 			
 			stmt.close();
 			conn.close();
@@ -545,17 +668,23 @@ public class DAO {
 		
 	}
 	
-	void createYearTable(String tableName) {
+	void createYearTable(String salesTable) {
 		try {
 			Statement stmt = conn.createStatement();
 	
 			//create the table to hold sales
-			String sql = "CREATE TABLE " + tableName + " (id IDENTITY NOT NULL PRIMARY KEY, january INT, february INT" +
-					", march INT, april INT, may INT, june INT, july INT, august INT, september INT" +
-					", october INT, november INT, december INT);";
+			String sql = "CREATE TABLE IF NOT EXISTS " + salesTable + " (id INT NOT NULL PRIMARY KEY, january INT DEFAULT 0, february INT DEFAULT 0" +
+					", march INT DEFAULT 0, april INT DEFAULT 0, may INT DEFAULT 0, june INT DEFAULT 0, july INT DEFAULT 0, august INT DEFAULT 0, september INT DEFAULT 0" +
+					", october INT DEFAULT 0, november INT DEFAULT 0, december INT DEFAULT 0);";
 			
 			stmt.executeUpdate(sql);
+			
+			sql = "alter table " + salesTable + " add foreign key (id) references tire_inventory(id);";
+			stmt.executeUpdate(sql);
+			
 			stmt.close();
+			
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

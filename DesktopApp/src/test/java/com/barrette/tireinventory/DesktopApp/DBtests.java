@@ -78,11 +78,16 @@ public class DBtests {
 			String tableName = "sales_" + currentYear;
 			
 			//create the table to hold sales
-			sql = "CREATE TABLE " + tableName + " (id IDENTITY NOT NULL PRIMARY KEY, january INT, february INT" +
+			sql = "CREATE TABLE " + tableName + " (id INT NOT NULL PRIMARY KEY, january INT, february INT" +
 					", march INT, april INT, may INT, june INT, july INT, august INT, september INT" +
 					", october INT, november INT, december INT);";
 			
 			stmt.executeUpdate(sql);
+			
+			sql = "alter table " + tableName + " add foreign key (id) references tire_inventory(id);";
+			stmt.executeUpdate(sql);
+
+//			test this
 			
 			stmt.close();
 			conn.close();
