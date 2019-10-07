@@ -116,6 +116,52 @@ public class AddTireViewController {
 		mainController.backTab();
 	}
 	
+	@FXML protected void inAndOutHandler(ActionEvent ae) {
+		Tire temp = new Tire();
+		
+		
+		if(brandField.getText().isEmpty() || modelField.getText().isEmpty() || 
+				widthBox.getSelectionModel().getSelectedIndex() == -1 || aspectBox.getSelectionModel().getSelectedIndex() == -1 || 
+				rimSizeBox.getSelectionModel().getSelectedIndex() == -1|| qtyBox.getSelectionModel().getSelectedIndex() == -1) {
+					Alert alert = new Alert(AlertType.ERROR, "One or more fields are incomplete", ButtonType.OK);
+					alert.showAndWait();
+					return;
+		}
+		
+		temp.setBrand(brandField.getText());
+		if(newUsedBox.getSelectionModel().getSelectedItem().equals("Used")) {
+			temp.setTireModel(modelField.getText() + "*");
+			temp.setIsNew(false);
+		} else {
+			temp.setTireModel(modelField.getText());
+			temp.setIsNew(true);
+		}
+		temp.setWidth(Integer.parseInt(widthBox.getValue()));
+		temp.setAspectRatio(Integer.parseInt(aspectBox.getValue()));
+		temp.setRimSize(Integer.parseInt(rimSizeBox.getValue()));
+		temp.setQuantity(Integer.parseInt(qtyBox.getValue()));
+		
+		int id = App.dao.checkForTire(temp);
+		if(id != -1) {
+			//tire already in the database
+			temp.setId(id);
+
+//			Alert alert = new Alert(AlertType.CONFIRMATION, "Tire already in database, updating quantity", ButtonType.OK);
+//			alert.showAndWait();
+
+			App.dao.addToSalesOnly(temp, Integer.parseInt(qtyBox.getValue()));
+			
+//			App.dao.incrementQuantity(temp, Integer.parseInt(qtyBox.getValue()));
+//			App.dao.decrementQuantity(temp, Integer.parseInt(qtyBox.getValue()));
+		} else {
+			temp.setType(typeBox.getValue());
+			App.dao.addTireToDatabase(temp);
+			App.dao.decrementQuantity(temp, Integer.parseInt(qtyBox.getValue()));
+		}
+		
+		reset();
+	}
+	
 	public void reset() {
 		qtyBox.getItems().clear();
 		widthBox.getItems().clear();

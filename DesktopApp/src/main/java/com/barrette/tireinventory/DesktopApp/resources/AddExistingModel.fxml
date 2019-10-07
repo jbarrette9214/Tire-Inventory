@@ -28,6 +28,7 @@
 			<HBox HBox.hgrow="always" alignment="CENTER" spacing="25" styleClass="buttonBox">
 				<Button text="Add"  onAction="#addButton" />
 				<Button text="Cancel" onAction="#cancelButton"/> 
+				<Button text="In and Out" onAction="#inAndOutButton"/>
 			</HBox>
 		</VBox>
 	
@@ -37,6 +38,7 @@
 		<HBox spacing="25" alignment="CENTER">
 			<Button text="Print Inventory Sheet" onAction="#printButton"/>
 			<Button text="Back Up" onAction="#backupButton"/>
+			<Button text="Analyze" onAction="#analyzeHandler"/>
 		</HBox>
 	</bottom>
 	

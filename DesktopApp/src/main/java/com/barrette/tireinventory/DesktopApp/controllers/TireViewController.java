@@ -69,4 +69,21 @@ public class TireViewController {
 		
 		quantity.setText("Quantity on hand: " + Integer.toString(newValue));
 	}
+	
+	/**
+	 * just adds the tires to the sales table
+	 * @param ae
+	 */
+	@FXML protected void inAndOutHandler(ActionEvent ae) {
+		int amount = Integer.parseInt(qty.getValue());
+		if(amount > 0) {
+			App.dao.addToSalesOnly(thisTire, amount);
+			Alert alert = new Alert(AlertType.CONFIRMATION, "Sale Recorded", ButtonType.OK);
+			alert.showAndWait();
+		} else {
+			Alert alert = new Alert(AlertType.WARNING, "Can not add 0 tires to sales.", ButtonType.OK);
+			alert.showAndWait();
+		}
+		
+	}
 }

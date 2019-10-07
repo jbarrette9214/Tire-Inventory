@@ -54,8 +54,7 @@
 	<!--     Bottom panel for message   -->
 	<bottom>
 		<AnchorPane id="messagePane">
-			<Label fx:id="message"></Label>
-			
+			<Label fx:id="message"></Label>			
 		</AnchorPane>
 		
 	</bottom>

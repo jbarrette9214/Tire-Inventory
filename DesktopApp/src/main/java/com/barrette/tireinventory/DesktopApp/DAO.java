@@ -25,13 +25,13 @@ import javafx.stage.FileChooser;
 
 public class DAO {
 	
-	Connection conn;
+	private static Connection conn;
 	
 	String salesTable;
 	
 	static final String USER = "sa";
 	static final String PASS = "";
-	final String dbName = "tire_inventory";			//change back to just tire_inventory before build
+	final String dbName = "test_tire_inventory";			//change back to just tire_inventory before build
 	
 	private List<Tire> tires = new ArrayList<Tire>();
 	
@@ -128,6 +128,10 @@ public class DAO {
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static Connection getConnection() {
+		return conn;
 	}
 
 	/**
@@ -689,5 +693,6 @@ public class DAO {
 			e.printStackTrace();
 		}
 	}
-	
+
+
 }

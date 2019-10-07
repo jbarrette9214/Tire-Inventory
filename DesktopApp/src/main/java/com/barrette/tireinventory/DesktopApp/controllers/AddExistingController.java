@@ -96,6 +96,32 @@ public class AddExistingController {
 	}
 	
 	/**
+	 * adds tires to the sales table only
+	 * @param ae
+	 */
+	@FXML protected void inAndOutButton(ActionEvent ae) {
+		int amount = Integer.parseInt(qtyCombo.getSelectionModel().getSelectedItem());
+
+		//match the string that is in the list view with the object it comes from
+		Tire temp = null;
+		for(Tire t : retrieved) {
+			if(t.toString().equals(listView.getSelectionModel().getSelectedItem())) {
+				temp = t;
+				break;
+			}
+		}
+
+		if(amount > 0) {
+			App.dao.addToSalesOnly(temp, amount);
+			Alert alert = new Alert(AlertType.CONFIRMATION, "Sale Recorded", ButtonType.OK);
+			alert.showAndWait();
+		} else {
+			Alert alert = new Alert(AlertType.WARNING, "Can not add 0 tires to sales.", ButtonType.OK);
+			alert.showAndWait();
+		}
+	}
+	
+	/**
 	 * creates a view that will be printed so that the inventory in the database can be checked
 	 * against the actual inventory
 	 * @param ae
@@ -221,6 +247,14 @@ public class AddExistingController {
 			}
 		}
 		
+	}
+	
+	/***
+	 * calls the pane to analyze sales
+	 * @param ae
+	 */
+	@FXML protected void analyzeHandler(ActionEvent ae) {
+		mainController.gotoAnalysisTab();
 	}
 	
 	

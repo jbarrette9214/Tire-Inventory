@@ -28,7 +28,8 @@
 			<Label>QTY: </Label>
 			<ComboBox fx:id="qty"></ComboBox>
 		</HBox>
-		<HBox styleClass="right">
+		<HBox styleClass="right" spacing ="20">
+			<Button styleClass="buttons" onAction="#inAndOutHandler" Text="In and Out"/>
 			<Button styleClass="buttons" onAction="#removeHandler" Text="Remove"/>	
 		</HBox>
 		

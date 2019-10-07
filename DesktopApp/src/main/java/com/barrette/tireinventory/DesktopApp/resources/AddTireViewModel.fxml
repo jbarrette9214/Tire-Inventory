@@ -44,6 +44,7 @@
 			<HBox styleClass="buttonBox" >
 				<Button Text="Save"  onAction="#saveButtonHandler"/>
 				<Button Text="Cancel"  onAction="#cancelButtonHandler"/>
+				<Button Text="In and Out" onAction="#inAndOutHandler"/>
 			</HBox>
 			
 		</VBox>

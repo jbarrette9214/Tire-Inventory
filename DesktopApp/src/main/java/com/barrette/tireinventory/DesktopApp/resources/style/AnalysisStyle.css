@@ -1,0 +1,39 @@
+BorderPane {
+	-fx-padding: 0 50 0 50;
+}
+
+.center {
+	-fx-pref-height:500px;
+}
+
+.title {
+	-fx-alignment:center;
+	-fx-font-size:3em;
+}
+
+.h2 {
+	-fx-font-size:1.5em;
+}
+
+.spacer {
+	-fx-min-width:200px;
+}
+
+ComboBox {
+	-fx-pref-width:100px;
+	-fx-pref-height:25px;
+}
+
+#chartHBox {
+	-fx-padding:10 10 10 10;
+	-fx-alignment:center;
+	-fx-pref-width: 1100px;
+}
+
+#statBox {
+	-fx-padding:100 10 10 10;
+}
+
+.widerComboBox {
+	-fx-pref-width: 150px;
+}

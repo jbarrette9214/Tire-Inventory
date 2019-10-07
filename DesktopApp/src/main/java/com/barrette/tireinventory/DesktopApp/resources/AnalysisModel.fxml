@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<BorderPane fx:controller="com.barrette.tireinventory.DesktopApp.controllers.AnalysisController" xmlns:fx="http://javafx.com/fxml/1">
+
+	<stylesheets>
+		<URL value="@style/AnalysisStyle.css"/>
+	</stylesheets>
+
+	<top>
+		<VBox>
+			<HBox HBox.hgrow="always" alignment="CENTER">
+				<Label styleClass="title" text="Sales Analysis"/>
+			</HBox>
+			<HBox spacing="10">
+				<Label styleClass="h2" text="Year"/>
+				<ComboBox fx:id="yearCombo"/>
+				<Label styleClass="spacer"/>
+				<Label styleClass="h2" text="Month"/>
+				<ComboBox fx:id="monthCombo"/>
+				<Label styleClass="spacer"/>
+				<Label styleClass="h2" text="Chart"/>
+				<ComboBox fx:id="chartCombo" styleClass="widerComboBox"/>
+				<Label styleClass="spacer"/>
+				<Button onAction="#getDataButton" text="Get Data"/>
+				
+			</HBox>
+		</VBox>	
+	</top>
+
+	<center>
+		<HBox>
+			<HBox fx:id="chartHBox">
+	
+	
+			</HBox>
+			<VBox fx:id="statBox">
+
+			</VBox>
+		</HBox>
+	</center>
+	
+</BorderPane>
+

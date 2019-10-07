@@ -31,7 +31,7 @@ public class mainController {
 	
 	@FXML private static Button queryButton;
 	
-	private static Tab lastTab, currentTab;
+	private static Tab lastTab, currentTab, analysisTab;
 	private static SingleSelectionModel<Tab> tabSelection;
 	private Tab addNewTab, tireViewTab, existingTab;
 	private TabPane tabPane;
@@ -123,17 +123,33 @@ public class mainController {
 		
 		tireViewTab = new Tab();
 		
+		FXMLLoader loader4 = new FXMLLoader(App.class.getResource("resources/AnalysisModel.fxml"));
+		BorderPane analysisPane = null;
+		try {
+			analysisPane = loader4.load();
+			
+		} catch(IOException e) {
+			e.printStackTrace();
+			System.out.println("Can't load analysisModel.fxml");
+		}
+		analysisTab = new Tab();
+		analysisTab.setContent(analysisPane);
+		
 		
 		tabPane = new TabPane();
 //		tabPane.setMaxHeight(900.0);
 		tabPane.getTabs().add(addNewTab);
 		tabPane.getTabs().add(tireViewTab);
 		tabPane.getTabs().add(existingTab);
+		tabPane.getTabs().add(analysisTab);
 
 		tabSelection = tabPane.getSelectionModel();
 		
 		tabSelection.select(existingTab);
-		
+
+//remove this after testing only		
+tabSelection.select(analysisTab);		
+
 		//scroll.setContent(tabPane);
 		mainPane.getChildren().add(tabPane);
 		
@@ -293,5 +309,8 @@ public class mainController {
 		temp = null;
 	}
 	
+	public static void gotoAnalysisTab() {
+		tabSelection.select(analysisTab);
+	}
 	
 }
