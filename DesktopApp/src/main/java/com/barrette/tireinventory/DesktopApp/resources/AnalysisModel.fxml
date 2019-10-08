@@ -21,7 +21,7 @@
 				<ComboBox fx:id="yearCombo"/>
 				<Label styleClass="spacer"/>
 				<Label styleClass="h2" text="Month"/>
-				<ComboBox fx:id="monthCombo"/>
+				<ComboBox fx:id="monthCombo" styleClass="widerComboBox"/>
 				<Label styleClass="spacer"/>
 				<Label styleClass="h2" text="Chart"/>
 				<ComboBox fx:id="chartCombo" styleClass="widerComboBox"/>

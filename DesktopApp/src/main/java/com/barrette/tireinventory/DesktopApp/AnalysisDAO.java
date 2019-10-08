@@ -191,6 +191,11 @@ public class AnalysisDAO {
 		return rs;
 	}
 	
+	/***
+	 * returns a resultset of the best selling tire model for a year
+	 * @param year
+	 * @return
+	 */
 	public ResultSet getBestSellingModelByYear(String year) {
 		ResultSet rs = null;
 		String sql = "select brand, tire_model, sum(january + february + march + april + may + june + july + august + september + " +
@@ -206,5 +211,65 @@ public class AnalysisDAO {
 		return rs;
 	}
 	
+	/***
+	 * returns a resultset of all the brands sold in a month
+	 * @param month
+	 * @param year
+	 * @return
+	 */
+	public ResultSet getMonthlyBrandSales(String month, String year) {
+		ResultSet rs = null;
+		
+		String sql = "select brand, sum(" + month + ") as total from (select * from sales" + year + " left join " +
+				"tire_inventory on sales" + year + ".tire_id=tire_inventory.id) group by brand;";
+		
+		try {
+			Statement stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return rs;
+	}
 	
+	/***
+	 * returns a result set of all model sales in a month
+	 * @param month
+	 * @param year
+	 * @return
+	 */
+	public ResultSet getMonthlyModelSales(String month, String year) {
+		ResultSet rs = null;
+		
+		String sql = "select tire_model, " + month + " from (select * from sales" + year + " left join tire_inventory " +
+				"on sales" + year + ".tire_id=tire_inventory.id);";
+		
+		try {
+			Statement stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return rs;
+	}
+	
+	public int getMonthTotal(String month, String year) {
+		ResultSet rs = null;
+		
+		String sql = "select sum(" + month + ") as total from sales" + year + ";";
+		
+		try {
+			Statement stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			while(rs.next()) {
+				return rs.getInt("total");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return 0;
+	}
 }

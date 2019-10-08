@@ -1,5 +1,7 @@
 package com.barrette.tireinventory.DesktopApp.controllers;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -30,20 +32,26 @@ public class AnalysisController {
 		for(String t: temp) {
 			yearCombo.getItems().add(t);
 		}
+		yearCombo.getSelectionModel().selectFirst();
 		
 		String[] months = {"All", "January", "February", "March", "April", "May", "June", "July", "August",
 						"September", "October", "November", "December"};
 		
 		monthCombo.getItems().addAll(months);
 		monthCombo.getSelectionModel().selectFirst();
+
 		
 		String[] charts = {"Sales by Year", "Monthly"};
 		chartCombo.getItems().addAll(charts);
 		
 		
-		createYearChart("2016");
+		createMonthlyChart("August", "2016");
 	}
 	
+	/***
+	 * creates the line chart to analyze a year, takes the year as a parameter
+	 * @param year
+	 */
 	private void createYearChart(String year) {
 		chartHBox.getChildren().clear();
 		statBox.getChildren().clear();
@@ -187,7 +195,86 @@ public class AnalysisController {
 		statBox.getChildren().add(bestSellingSize2);
 	}
 	
+	/***
+	 * creates a pie chart to analyze a month, takes the month and year as a parameter
+	 * @param month
+	 * @param year
+	 */
+	private void createMonthlyChart(String month, String year) {
+		
+		chartHBox.getChildren().clear();
+		statBox.getChildren().clear();
+		
+		//set the data that will be added to the pie chart for brand sales
+		ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+		
+		if(monthCombo.getSelectionModel().getSelectedIndex() >= 1) {
+			ResultSet rs = analysisDAO.getMonthlyBrandSales(monthCombo.getSelectionModel().getSelectedItem(),
+					yearCombo.getSelectionModel().getSelectedItem());
+			
+			try {
+				while(rs.next()) {
+					if(rs.getInt("total") != 0) {
+						pieChartData.add(new PieChart.Data(rs.getString("brand"), rs.getInt("total")));	
+					}
+				}
+				rs.close();
+
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} else {
+			return;
+		}
+		
+		PieChart pieChart = new PieChart(pieChartData);
+		pieChart.setMaxHeight(500);
+		pieChart.setTitle("Brand Sales");
+		pieChart.setLabelsVisible(false);
+		pieChart.setClockwise(true);
+		
+		chartHBox.getChildren().add(pieChart);
+		
+		//set the data that will be added to the pie chart for model sales
+		ObservableList<PieChart.Data> modelPieChartData = FXCollections.observableArrayList();
+		
+		ResultSet rs = null;
+		rs = analysisDAO.getMonthlyModelSales(monthCombo.getSelectionModel().getSelectedItem(), 
+				yearCombo.getSelectionModel().getSelectedItem());
+		try {
+			while(rs.next()) {
+				if(rs.getInt(monthCombo.getSelectionModel().getSelectedItem().toLowerCase()) != 0) {
+					modelPieChartData.add(new PieChart.Data(rs.getString("tire_model"), 
+							rs.getInt(monthCombo.getSelectionModel().getSelectedItem())));
+				}
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		PieChart modelPieChart = new PieChart(modelPieChartData);
+		modelPieChart.setMaxHeight(500);
+		modelPieChart.setTitle("Model Sales");
+		modelPieChart.setLabelsVisible(false);
+		modelPieChart.setClockwise(true);
+		
+		chartHBox.getChildren().add(modelPieChart);
+		
+		Label lbl = new Label("Total Sales: ");
+		lbl.setStyle("-fx-font-size:2em");
+		statBox.getChildren().add(lbl);
+
+		Label monthTotal = new Label();
+		monthTotal.setText("     " + String.valueOf(analysisDAO.getMonthlyTotal(yearCombo.getSelectionModel().getSelectedItem(), 
+				monthCombo.getSelectionModel().getSelectedItem())));
+		monthTotal.setStyle("-fx-font-size:1.5em");
+		statBox.getChildren().add(monthTotal);
+		
+	}
+	
 	@FXML protected void getDataButton(ActionEvent ae) {
+		
+		
 		//first check to see which chart is requested, it will effect what else needs to be selected
 		if(chartCombo.getSelectionModel().getSelectedItem() != null && 
 				chartCombo.getSelectionModel().getSelectedItem().equalsIgnoreCase("Sales by Year")) {
@@ -195,6 +282,12 @@ public class AnalysisController {
 			if(yearCombo.getSelectionModel().getSelectedItem() != null) {
 				createYearChart(yearCombo.getSelectionModel().getSelectedItem());
 			} 
+		} else if(chartCombo.getSelectionModel().getSelectedItem() != null &&
+				chartCombo.getSelectionModel().getSelectedItem().equalsIgnoreCase("Monthly")) {
+			if(yearCombo.getSelectionModel().getSelectedItem() != null && 
+					monthCombo.getSelectionModel().getSelectedItem() != null) {
+				createMonthlyChart(monthCombo.getSelectionModel().getSelectedItem(), yearCombo.getSelectionModel().getSelectedItem());
+			}
 		}
 	}
 
