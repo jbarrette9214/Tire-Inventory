@@ -4,13 +4,21 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.print.PageLayout;
+import javafx.print.PageOrientation;
+import javafx.print.Paper;
+import javafx.print.Printer;
+import javafx.print.PrinterJob;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.*;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.barrette.tireinventory.DesktopApp.AnalysisDAO;
 import javafx.scene.chart.*;
@@ -20,6 +28,8 @@ public class AnalysisController {
 	
 	AnalysisDAO analysisDAO;
 	int[] monthlySales = new int[12];
+	boolean landscape;
+	ScrollPane scroll = null;
 	
 	@FXML HBox chartHBox;
 	@FXML VBox statBox;
@@ -41,11 +51,11 @@ public class AnalysisController {
 		monthCombo.getSelectionModel().selectFirst();
 
 		
-		String[] charts = {"Sales by Year", "Monthly"};
+		String[] charts = {"Sales by Year", "Monthly Chart", "Monthly Details"};
 		chartCombo.getItems().addAll(charts);
 		
 		
-		createMonthlyChart("August", "2016");
+		createYearChart("2016");
 	}
 	
 	/***
@@ -53,12 +63,15 @@ public class AnalysisController {
 	 * @param year
 	 */
 	private void createYearChart(String year) {
+		landscape = true;
+		
 		chartHBox.getChildren().clear();
 		statBox.getChildren().clear();
 		
 		//get the info
 		monthlySales = null;
 		monthlySales = analysisDAO.getAllMonthTotals(year);
+		
 		
 		//setup the chart
 		NumberAxis monthAxis = new NumberAxis();
@@ -201,16 +214,17 @@ public class AnalysisController {
 	 * @param year
 	 */
 	private void createMonthlyChart(String month, String year) {
+		landscape = true;		//set for printing purposes
 		
 		chartHBox.getChildren().clear();
 		statBox.getChildren().clear();
+		
 		
 		//set the data that will be added to the pie chart for brand sales
 		ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
 		
 		if(monthCombo.getSelectionModel().getSelectedIndex() >= 1) {
-			ResultSet rs = analysisDAO.getMonthlyBrandSales(monthCombo.getSelectionModel().getSelectedItem(),
-					yearCombo.getSelectionModel().getSelectedItem());
+			ResultSet rs = analysisDAO.getMonthlyBrandSales(month.toLowerCase(), year);
 			
 			try {
 				while(rs.next()) {
@@ -229,7 +243,7 @@ public class AnalysisController {
 		
 		PieChart pieChart = new PieChart(pieChartData);
 		pieChart.setMaxHeight(500);
-		pieChart.setTitle("Brand Sales");
+		pieChart.setTitle(month + " " + year +  " Brand Sales");
 		pieChart.setLabelsVisible(false);
 		pieChart.setClockwise(true);
 		
@@ -239,13 +253,12 @@ public class AnalysisController {
 		ObservableList<PieChart.Data> modelPieChartData = FXCollections.observableArrayList();
 		
 		ResultSet rs = null;
-		rs = analysisDAO.getMonthlyModelSales(monthCombo.getSelectionModel().getSelectedItem(), 
-				yearCombo.getSelectionModel().getSelectedItem());
+		rs = analysisDAO.getMonthlyModelSales(month, year);
 		try {
 			while(rs.next()) {
-				if(rs.getInt(monthCombo.getSelectionModel().getSelectedItem().toLowerCase()) != 0) {
+				if(rs.getInt(month) != 0) {
 					modelPieChartData.add(new PieChart.Data(rs.getString("tire_model"), 
-							rs.getInt(monthCombo.getSelectionModel().getSelectedItem())));
+							rs.getInt(month)));
 				}
 			}
 		} catch(SQLException e) {
@@ -254,26 +267,64 @@ public class AnalysisController {
 		
 		PieChart modelPieChart = new PieChart(modelPieChartData);
 		modelPieChart.setMaxHeight(500);
-		modelPieChart.setTitle("Model Sales");
+		modelPieChart.setTitle(month + " " + year + " Model Sales");
 		modelPieChart.setLabelsVisible(false);
 		modelPieChart.setClockwise(true);
 		
 		chartHBox.getChildren().add(modelPieChart);
 		
-		Label lbl = new Label("Total Sales: ");
-		lbl.setStyle("-fx-font-size:2em");
-		statBox.getChildren().add(lbl);
+		Label lbl2 = new Label("Total Sales: ");
+		lbl2.setStyle("-fx-font-size:2em");
+		statBox.getChildren().add(lbl2);
 
 		Label monthTotal = new Label();
-		monthTotal.setText("     " + String.valueOf(analysisDAO.getMonthlyTotal(yearCombo.getSelectionModel().getSelectedItem(), 
-				monthCombo.getSelectionModel().getSelectedItem())));
+		monthTotal.setText("     " + String.valueOf(analysisDAO.getMonthlyTotal(year, month.toLowerCase())));
 		monthTotal.setStyle("-fx-font-size:1.5em");
 		statBox.getChildren().add(monthTotal);
 		
 	}
 	
-	@FXML protected void getDataButton(ActionEvent ae) {
+	private void createMonthlyDetailsReport(String month, String year) {
+		landscape = false;
 		
+		chartHBox.getChildren().clear();
+		statBox.getChildren().clear();
+		
+		VBox vbox = new VBox();
+		Label title = new Label();
+		title.setText(month + " " + year + " Sales Details");
+		title.setStyle("-fx-font-size:2em");
+		vbox.getChildren().add(title);
+		
+		//list to hold all the labels that are created
+		List<Label> labels = new ArrayList<Label>();
+		
+		ResultSet rs = analysisDAO.getMonthlyTireSales(month, year);
+		try {
+			while(rs.next()) {
+				Label temp = new Label();
+				temp.setText(rs.getString("brand") + " " + rs.getString("tire_model") + " " + rs.getInt("width") + 
+						"/" + rs.getInt("aspect_ratio") + "R" + rs.getInt("rim_size") + "      " + rs.getInt(month) + 
+						" Sold");
+				temp.setStyle("-fx-font-size:1.25em");
+				labels.add(temp);
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		for(Label l : labels) {
+			vbox.getChildren().add(l);
+		}
+		
+		scroll = new ScrollPane();
+		scroll.setContent(vbox);
+		scroll.setMaxHeight(500);
+		
+		chartHBox.getChildren().add(scroll);
+	}
+	
+	@FXML protected void getDataButton(ActionEvent ae) {
 		
 		//first check to see which chart is requested, it will effect what else needs to be selected
 		if(chartCombo.getSelectionModel().getSelectedItem() != null && 
@@ -288,8 +339,56 @@ public class AnalysisController {
 					monthCombo.getSelectionModel().getSelectedItem() != null) {
 				createMonthlyChart(monthCombo.getSelectionModel().getSelectedItem(), yearCombo.getSelectionModel().getSelectedItem());
 			}
-		}
+		} else if(chartCombo.getSelectionModel().getSelectedItem() != null &&
+				chartCombo.getSelectionModel().getSelectedItem().equalsIgnoreCase("Monthly Details")) {
+			if(yearCombo.getSelectionModel().getSelectedItem() != null && 
+					monthCombo.getSelectionModel().getSelectedItem() != null) {
+				createMonthlyDetailsReport(monthCombo.getSelectionModel().getSelectedItem(), yearCombo.getSelectionModel().getSelectedItem());
+			}
+		} 
 	}
 
-	
+	@FXML protected void printChartButton(ActionEvent ae) {
+		Printer printer = Printer.getDefaultPrinter();
+
+		PageLayout pageLayout = null;
+		if(!landscape) {
+			pageLayout = printer.createPageLayout(Paper.A4,  PageOrientation.PORTRAIT, 
+				0.5,0.5,0.5,0.5);
+		} else {
+			pageLayout = printer.createPageLayout(Paper.A4, PageOrientation.LANDSCAPE, 0.5, 0.5, 0.5, 0.5);
+		}
+
+		PrinterJob job = PrinterJob.createPrinterJob();
+
+		Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure you want to print analysis chart?", 
+								ButtonType.YES, ButtonType.NO);
+		Optional<ButtonType> result = alert.showAndWait();
+
+		if(result.get() == ButtonType.YES) {
+			if(!landscape)	{		//is the details report, only print whats in the ScrollPane
+				double width = scroll.getWidth();
+				double height = scroll.getHeight();
+				
+				//set the size of the pane to the printable size
+				scroll.setPrefSize(pageLayout.getPrintableWidth(), pageLayout.getPrintableHeight());
+				job.printPage(scroll);
+				
+				//reset it to the original size
+				scroll.setPrefSize(width, height);
+			} else { 					
+				double width = chartHBox.getWidth();
+				double height = chartHBox.getHeight();
+				
+				//set the size to the printable size
+				chartHBox.setPrefSize(pageLayout.getPrintableWidth(), pageLayout.getPrintableHeight());
+				
+				job.printPage(chartHBox);
+				
+				chartHBox.setPrefSize(width, height);
+			}
+			job.endJob();
+		}
+		
+	}
 }

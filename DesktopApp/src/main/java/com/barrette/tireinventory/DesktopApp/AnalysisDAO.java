@@ -255,7 +255,7 @@ public class AnalysisDAO {
 		return rs;
 	}
 	
-	public int getMonthTotal(String month, String year) {
+/*	public int getMonthlyTotal(String month, String year) {
 		ResultSet rs = null;
 		
 		String sql = "select sum(" + month + ") as total from sales" + year + ";";
@@ -271,5 +271,22 @@ public class AnalysisDAO {
 		}
 		
 		return 0;
+	}
+*/
+	public ResultSet getMonthlyTireSales(String month, String year) {
+		ResultSet rs = null;
+		
+		String sql = "select brand, tire_model, width, aspect_ratio, rim_size, " + month + " from "+ 
+				" (select * from sales" + year + " left join tire_inventory on sales" + year + 
+				".tire_id=tire_inventory.id);";
+		
+		try {
+			Statement stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return rs;
 	}
 }

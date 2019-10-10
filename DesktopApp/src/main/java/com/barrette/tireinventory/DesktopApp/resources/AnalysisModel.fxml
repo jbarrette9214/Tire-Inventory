@@ -27,7 +27,7 @@
 				<ComboBox fx:id="chartCombo" styleClass="widerComboBox"/>
 				<Label styleClass="spacer"/>
 				<Button onAction="#getDataButton" text="Get Data"/>
-				
+				<Button onAction="#printChartButton" text="Print"/>
 			</HBox>
 		</VBox>	
 	</top>
