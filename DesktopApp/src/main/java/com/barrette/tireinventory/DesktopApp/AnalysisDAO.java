@@ -72,8 +72,8 @@ public class AnalysisDAO {
 			stmt.close();
 			rs.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//table may not be present so just return 0
+			temp = 0;
 		}
 		
 		return temp;

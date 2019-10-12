@@ -20,6 +20,7 @@ public class App extends Application
 
 	public static DAO dao;
 	public static Stage mainStage;
+	public static Scene mainScene;
 	
 	public static void main(String[] args) {
 		launch(args);
@@ -43,7 +44,7 @@ public class App extends Application
 		
 		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 		
-		Scene mainScene = new Scene(root, screen.getWidth() - 100, screen.getHeight() - 150);
+		mainScene = new Scene(root, screen.getWidth() - 100, screen.getHeight() - 150);
 		
 		primary.setTitle("Tire Inventory");
 		primary.setScene(mainScene);

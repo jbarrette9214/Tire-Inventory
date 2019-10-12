@@ -27,13 +27,13 @@
 				<ComboBox fx:id="chartCombo" styleClass="widerComboBox"/>
 				<Label styleClass="spacer"/>
 				<Button onAction="#getDataButton" text="Get Data"/>
-				<Button onAction="#printChartButton" text="Print"/>
+				<Label styleClass="spacer"/>
 			</HBox>
 		</VBox>	
 	</top>
 
 	<center>
-		<HBox>
+		<HBox fx:id="mainChartBox">
 			<HBox fx:id="chartHBox">
 	
 	
@@ -43,6 +43,12 @@
 			</VBox>
 		</HBox>
 	</center>
+	
+	<bottom>
+		<HBox alignment="CENTER">
+			<Button onAction="#printChartButton" text="Print"/>
+		</HBox>
+	</bottom>
 	
 </BorderPane>
 

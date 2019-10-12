@@ -677,13 +677,13 @@ public class DAO {
 			Statement stmt = conn.createStatement();
 	
 			//create the table to hold sales
-			String sql = "CREATE TABLE IF NOT EXISTS " + salesTable + " (id INT NOT NULL PRIMARY KEY, january INT DEFAULT 0, february INT DEFAULT 0" +
+			String sql = "CREATE TABLE IF NOT EXISTS " + salesTable + " (tire_id INT NOT NULL PRIMARY KEY, january INT DEFAULT 0, february INT DEFAULT 0" +
 					", march INT DEFAULT 0, april INT DEFAULT 0, may INT DEFAULT 0, june INT DEFAULT 0, july INT DEFAULT 0, august INT DEFAULT 0, september INT DEFAULT 0" +
 					", october INT DEFAULT 0, november INT DEFAULT 0, december INT DEFAULT 0);";
 			
 			stmt.executeUpdate(sql);
 			
-			sql = "alter table " + salesTable + " add foreign key (id) references tire_inventory(id);";
+			sql = "alter table " + salesTable + " add foreign key (tire_id) references tire_inventory(id);";
 			stmt.executeUpdate(sql);
 			
 			stmt.close();

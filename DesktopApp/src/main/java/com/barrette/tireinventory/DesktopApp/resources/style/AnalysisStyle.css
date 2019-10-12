@@ -2,8 +2,17 @@ BorderPane {
 	-fx-padding: 0 50 0 50;
 }
 
+Button {
+	-fx-pref-width: 100px;
+	-fx-pref-height: 30px;
+}
+
 .center {
 	-fx-pref-height:500px;
+}
+
+.bottom {
+	-fx-alignment:center;
 }
 
 .title {
