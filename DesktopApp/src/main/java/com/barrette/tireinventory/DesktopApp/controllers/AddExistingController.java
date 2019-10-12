@@ -149,14 +149,10 @@ public class AddExistingController {
 
 		PageLayout pageLayout = printer.createPageLayout(Paper.A4,  PageOrientation.PORTRAIT, 
 				0.5,0.5,0.5,0.5);
-				
-		Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure you want to print inventory", 
-								ButtonType.YES, ButtonType.NO);
-		Optional<ButtonType> result = alert.showAndWait();
-		
+						
 		List<Label> labels = new ArrayList<Label>();
 		
-		if(job != null && result.get() == ButtonType.YES ) {
+		if(job.showPrintDialog(App.mainStage) ) {
 
 			int counter = 0;
 			int rim = 0;
