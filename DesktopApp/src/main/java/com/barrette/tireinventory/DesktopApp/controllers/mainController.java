@@ -147,9 +147,6 @@ public class mainController {
 		
 		tabSelection.select(existingTab);
 
-//remove this after testing only		
-tabSelection.select(analysisTab);		
-
 		//scroll.setContent(tabPane);
 		mainPane.getChildren().add(tabPane);
 		
