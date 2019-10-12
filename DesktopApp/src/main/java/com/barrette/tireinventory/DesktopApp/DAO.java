@@ -31,7 +31,7 @@ public class DAO {
 	
 	static final String USER = "sa";
 	static final String PASS = "";
-	final String dbName = "test_tire_inventory";			//change back to just tire_inventory before build
+	final String dbName = "tire_inventory";			//change back to just tire_inventory before build
 	
 	private List<Tire> tires = new ArrayList<Tire>();
 	
