@@ -331,7 +331,7 @@ public class AnalysisDAO {
 		}
 		
 		
-		int[] days = new int[31];
+		int[] days = new int[dayCount];
 		
 		ResultSet rs = null;
 		try {
@@ -348,6 +348,7 @@ public class AnalysisDAO {
 			stmt.close();
 
 		} catch (SQLException e) {
+			return null;
 			//e.printStackTrace();
 		}
 		

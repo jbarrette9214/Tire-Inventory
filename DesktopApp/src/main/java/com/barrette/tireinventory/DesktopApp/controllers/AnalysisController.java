@@ -388,27 +388,30 @@ public class AnalysisController {
 				
 		XYChart.Series<String, Number> series = new XYChart.Series<String, Number>();
 		
-		int[] days = analysisDAO.getDailyTotals(month, Integer.parseInt(year));
+		int[] days = null; 
+		days = analysisDAO.getDailyTotals(month, Integer.parseInt(year));
 		
-		int dayCount = 0;
-		if(month.equals("january") || month.equals("march") || month.equals("may") || month.equals("july") ||
-				month.equals("august") || month.equals("october") || month.equals("december")) {
-			dayCount = 31;
-		} else if (month.equals("february")) {
-			dayCount = 28;
-		} else {
-			dayCount = 30;
-		}
 		
-		for(int i = 0; i < dayCount; ++i) {
-			if(days[i]> yAxis.getUpperBound()) {
-				yAxis.setUpperBound(days[i] + 1);
+		if(days != null) {
+			int dayCount = 0;
+			if(month.equalsIgnoreCase("january") || month.equalsIgnoreCase("march") || month.equalsIgnoreCase("may") || 
+					month.equalsIgnoreCase("july") || month.equalsIgnoreCase("august") || month.equalsIgnoreCase("october") || 
+					month.equalsIgnoreCase("december")) {
+				dayCount = 31;
+			} else if (month.equalsIgnoreCase("february")) {
+				dayCount = 28;
+			} else {
+				dayCount = 30;
 			}
-			series.getData().add(new XYChart.Data<String, Number>(Integer.toString(i + 1), days[i]));
-		}
-		
 
-		if(days.length != 0) {
+			
+			for(int i = 0; i < dayCount; ++i) {
+				if(days[i]> yAxis.getUpperBound()) {
+					yAxis.setUpperBound(days[i] + 1);
+				}
+				series.getData().add(new XYChart.Data<String, Number>(Integer.toString(i + 1), days[i]));
+			}
+			
 			BarChart<String, Number> barChart = new BarChart<String, Number>(xAxis, yAxis);
 			barChart.setTitle(monthCombo.getSelectionModel().getSelectedItem() + " " + 
 					yearCombo.getSelectionModel().getSelectedItem() + " Daily Sales");
@@ -416,11 +419,14 @@ public class AnalysisController {
 			barChart.setPrefWidth(1000);
 			barChart.setLegendVisible(false);
 			chartHBox.getChildren().add(barChart);
+
+		
 		} else {
-			Label label = new Label("No Data Available");
-			label.setStyle("-fx-font-size:2em");
-			chartHBox.getChildren().add(label);
+				Label label = new Label("No Data Available");
+				label.setStyle("-fx-font-size:2em");
+				chartHBox.getChildren().add(label);
 		}
+		
 	}
 	
 	@FXML protected void getDataButton(ActionEvent ae) {

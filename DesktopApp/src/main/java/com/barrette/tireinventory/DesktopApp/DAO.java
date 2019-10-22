@@ -110,7 +110,6 @@ public class DAO {
 //year = 2016;
 //month = 9;
 			salesTable = "sales" + year;
-			
 			createYearTable(salesTable);	//create the sales table for current year, won't go through if exists
 			createMonthTable();
 		} catch (SQLException  e) {
