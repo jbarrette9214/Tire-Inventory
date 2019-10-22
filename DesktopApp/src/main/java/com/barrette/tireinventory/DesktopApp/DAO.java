@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.barrette.tireinventory.DesktopApp.models.Tire;
+import com.barrette.tireinventory.DesktopApp.AnalysisDAO;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -35,7 +36,7 @@ public class DAO {
 	
 	private List<Tire> tires = new ArrayList<Tire>();
 	
-	private int month, year;
+	private int day, month, year;
 	
 	public DAO() {
 		try {
@@ -102,14 +103,16 @@ public class DAO {
 			
 			year = cal.get(Calendar.YEAR);
 			month = cal.get(Calendar.MONTH);
+			day = cal.get(Calendar.DAY_OF_MONTH);
 			
 //need to change this back used for testing only			
-//salesTable = "sales_2016";
-
+//salesTable = "sales2016";
+//year = 2016;
+//month = 9;
 			salesTable = "sales" + year;
 			
 			createYearTable(salesTable);	//create the sales table for current year, won't go through if exists
-			
+			createMonthTable();
 		} catch (SQLException  e) {
 			
 			Alert alert = new Alert(AlertType.ERROR, "Unable to connect to database, may be open already", ButtonType.OK);
@@ -121,6 +124,9 @@ public class DAO {
 		
 	}
 	
+	/**
+	 * closes the connection
+	 */
 	public void closeConnection() {
 		
 		try {
@@ -130,6 +136,10 @@ public class DAO {
 		}
 	}
 	
+	/**
+	 * returns the database connection
+	 * @return conn
+	 */
 	public static Connection getConnection() {
 		return conn;
 	}
@@ -165,6 +175,10 @@ public class DAO {
 		}
 	}
 	
+	/**
+	 * gets the entire inventory
+	 * @return List of the entire inventory
+	 */
 	public List<Tire> getEntireInventory() {
 		tires.clear();
 		
@@ -439,6 +453,10 @@ public class DAO {
 							tire.getId() + ", " + amount + ");";
 					
 					stmt.executeUpdate(update);
+					
+					update = "insert into " + monthWord + year + " (id, day" + day + ") values (" + 
+							tire.getId() + ", " + amount + ");";
+					stmt.executeUpdate(update);
 				} else {
 					//tire is already in the inventory
 					String update = "insert into " + salesTable + " (" + monthWord + ") values (" +
@@ -447,6 +465,21 @@ public class DAO {
 					if(current != -1) {
 						stmt.executeUpdate(update);
 					}
+					
+					query = "select day" + day + " from " + month + year + " where tire_id = " + tire.getId() + ";";
+					
+					rs2.close();
+					rs2 = stmt.executeQuery(query);
+					
+					int count = 0;
+					while(rs2.next()) {
+						count = rs2.getInt("day" + day);
+						break;
+					}
+					count = count + amount;
+					
+					update = "insert into " + monthWord + year + " ( day" + day + ") values (" + count + " where id = "
+							+ tire.getId() + ";";
 				}
 				rs2.close();
 			}
@@ -689,6 +722,84 @@ public class DAO {
 			stmt.close();
 			
 			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	void createMonthTable() {
+		String monthString ="";
+		int dayCount = 0;
+		
+		switch(month) {
+		case 0:
+			monthString = "january";
+			dayCount = 31;
+			break;
+		case 1:
+			monthString = "february";
+			dayCount = 28;
+			break;
+		case 2:
+			monthString = "march";
+			dayCount = 31;
+			break;
+		case 3: 
+			monthString = "april";
+			dayCount = 30;
+			break;
+		case 4:
+			monthString = "may";
+			dayCount = 31;
+			break;
+		case 5:
+			monthString = "june";
+			dayCount = 30;
+			break;
+		case 6:
+			monthString = "july";
+			dayCount = 31;
+			break;
+		case 7:
+			monthString = "august";
+			dayCount = 31;
+			break;
+		case 8:
+			monthString = "september";
+			dayCount = 30;
+			break;
+		case 9:
+			monthString = "october";
+			dayCount = 31;
+			break;
+		case 10:
+			monthString = "november";
+			dayCount = 30;
+			break;
+		case 11:
+			monthString = "december";
+			dayCount = 31;
+			break;
+		}
+		
+		
+		try {
+			Statement stmt = conn.createStatement();
+			
+			//create the table to hold monthly sales
+			String sql = "CREATE TABLE IF NOT EXISTS " + monthString + year + "(tire_id INT NOT NULL PRIMARY KEY);";
+			
+			stmt.executeUpdate(sql);
+			sql = "alter table " + monthString + year + " add foreign key (tire_id) references tire_inventory(id);";
+			stmt.executeUpdate(sql);
+				
+			for(int i = 1; i <= dayCount; i++) {
+				sql = "alter table " + monthString + year + " add column if not exists day" + i + " INT DEFAULT 0;";
+				
+				stmt.executeUpdate(sql);
+			}
+			
+			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

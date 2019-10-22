@@ -53,7 +53,7 @@ public class AnalysisController {
 		monthCombo.getSelectionModel().selectFirst();
 
 		
-		String[] charts = {"Sales by Year", "Monthly Chart", "Monthly Details", "Compare to Last Year"};
+		String[] charts = {"Sales by Year", "Monthly Chart", "Monthly Details", "Compare to Last Year", "Daily Chart by Month"};
 		chartCombo.getItems().addAll(charts);
 		chartCombo.getSelectionModel().selectFirst();
 		
@@ -322,6 +322,11 @@ public class AnalysisController {
 		
 	}
 	
+	/**
+	 * creates a detailed report of all tires sold in a selected month, comes up as a list
+	 * @param month
+	 * @param year
+	 */
 	private void createMonthlyDetailsReport(String month, String year) {
 		landscape = false;
 		
@@ -364,6 +369,60 @@ public class AnalysisController {
 		chartHBox.getChildren().add(scroll);
 	}
 	
+	/**
+	 * creates a bar chart showing tire sales each day of a selected month
+	 * @param month
+	 * @param year
+	 */
+	private void createDailyChart(String month, String year) {
+		landscape = true;
+		
+		chartHBox.getChildren().clear();
+		statBox.getChildren().clear();
+				
+		CategoryAxis xAxis = new CategoryAxis();
+		NumberAxis yAxis = new NumberAxis(0.0, 5.0, 1.0);
+		
+		xAxis.setLabel("Days");
+		yAxis.setLabel("Sales");
+				
+		XYChart.Series<String, Number> series = new XYChart.Series<String, Number>();
+		
+		int[] days = analysisDAO.getDailyTotals(month, Integer.parseInt(year));
+		
+		int dayCount = 0;
+		if(month.equals("january") || month.equals("march") || month.equals("may") || month.equals("july") ||
+				month.equals("august") || month.equals("october") || month.equals("december")) {
+			dayCount = 31;
+		} else if (month.equals("february")) {
+			dayCount = 28;
+		} else {
+			dayCount = 30;
+		}
+		
+		for(int i = 0; i < dayCount; ++i) {
+			if(days[i]> yAxis.getUpperBound()) {
+				yAxis.setUpperBound(days[i] + 1);
+			}
+			series.getData().add(new XYChart.Data<String, Number>(Integer.toString(i + 1), days[i]));
+		}
+		
+
+		if(days.length != 0) {
+			BarChart<String, Number> barChart = new BarChart<String, Number>(xAxis, yAxis);
+			barChart.setTitle(monthCombo.getSelectionModel().getSelectedItem() + " " + 
+					yearCombo.getSelectionModel().getSelectedItem() + " Daily Sales");
+			barChart.getData().add(series);
+			barChart.setPrefWidth(1000);
+			barChart.setLegendVisible(false);
+			chartHBox.getChildren().add(barChart);
+		} else {
+			Label label = new Label("No Data Available");
+			label.setStyle("-fx-font-size:2em");
+			chartHBox.getChildren().add(label);
+		}
+	}
+	
 	@FXML protected void getDataButton(ActionEvent ae) {
 		//first check to see which chart is requested, it will effect what else needs to be selected
 		if(chartCombo.getSelectionModel().getSelectedItem() != null && 
@@ -390,6 +449,13 @@ public class AnalysisController {
 			if(yearCombo.getSelectionModel().getSelectedItem() != null) {
 				createYearChart(yearCombo.getSelectionModel().getSelectedItem(), true);
 			}
+		} else if(chartCombo.getSelectionModel().getSelectedItem() != null &&
+				chartCombo.getSelectionModel().getSelectedItem().equalsIgnoreCase("Daily Chart by Month")) {
+			if(yearCombo.getSelectionModel().getSelectedItem() != null &&
+					monthCombo.getSelectionModel().getSelectedItem() != null) {
+						createDailyChart(monthCombo.getSelectionModel().getSelectedItem(),
+								yearCombo.getSelectionModel().getSelectedItem());
+					}
 		}
 	
 	}

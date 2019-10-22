@@ -289,4 +289,68 @@ public class AnalysisDAO {
 		
 		return rs;
 	}
+	
+	/**
+	 * returns a resultset of the count for a specific tire and day of the month
+	 * @param month
+	 * @param year
+	 * @param day
+	 * @param id
+	 * @return
+	 */
+	public ResultSet getDayCountById(String month, int year, int day, int id) {
+		ResultSet rs = null;
+		
+		String sql = "select day" + day + " from " + month + year + " where tire_id = " + id + ";";
+		
+		try {
+			Statement stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return rs;
+	}
+	
+	public int[] getDailyTotals(String month, int year) {
+		
+		String sql = "select sum(january + february + march + april + june + july + august + september + october " +
+				"+ november + december) as total from sales" + year + ";";
+
+		
+		int dayCount;
+		
+		if(month.equals("january") || month.equals("march") || month.equals("may") || month.equals("july") ||
+				month.equals("august") || month.equals("october") || month.equals("december")) {
+			dayCount = 31;
+		} else if (month.equals("february")) {
+			dayCount = 28;
+		} else {
+			dayCount = 30;
+		}
+		
+		
+		int[] days = new int[31];
+		
+		ResultSet rs = null;
+		try {
+			Statement stmt = conn.createStatement();
+
+			for(int i = 1; i <= dayCount; ++i) {
+				sql = "select sum(day" + i + ") as total from " + month + year + ";";
+				rs = stmt.executeQuery(sql);
+				while(rs.next()) {
+					days[i-1] = rs.getInt("total");
+					break;
+				}
+			}
+			stmt.close();
+
+		} catch (SQLException e) {
+			//e.printStackTrace();
+		}
+		
+		return days;
+	}
 }
